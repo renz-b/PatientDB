@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    {% assets "index_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+    
+    <link rel="shortcut icon" href="{{ url_for('static', filename='svg/icon.svg') }}"
+        type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='svg/icon.svg') }}"
+        type="image/x-icon">
+    {% block head %}
+    <title>PatientDB</title>
+    {% endblock %}
+</head>
+
+<body>
+    <header class="header">
+        <div class="overlay has-fade"></div>
+
+        <nav class="container flex flex-jc-sb flex-ai-c flex-fd-row">
+            <a href="/" class="header__logo">
+                <img src="{{ url_for('static', filename='svg/Logo.svg') }}" alt="PatientDB">
+                
+            </a>
+
+            <div class="header__links hide-for-mobile">
+                <a href="{{ url_for('main.index') }}">Home</a>
+                <a href="{{ url_for('main.about') }}">About</a>
+                <a href="#">Contact</a>
+            </div>
+
+            <a id="btnHamburger" href="#" class="header__toggle hide-for-desktop">
+                <span></span>
+                <span></span>
+                <span></span>
+            </a>
+        </nav>
+
+        <div class="header__menu has-fade">
+            <a href="{{ url_for('main.index') }}">Home</a>
+            <a href="{{ url_for('main.about') }}">About</a>
+            <a href="">Contact</a>
+        </div>
+    </header>
+    {%block content %}
+    {% endblock %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

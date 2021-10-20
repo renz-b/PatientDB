@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="flex flex-fd-col flex-fill-height">
+        <section class="hero container--all">
+            <div class="hero__hello">
+                <h1>Hello!</h1>
+            </div>
+
+            <div class="hero__image"></div>
+
+            <div class="hero__text container--pb container--wrapper">
+                <p>
+                PatientDB is a simple web app that stores patient information and able to query the database to display the information.
+                </p>
+                <br>
+                <p>
+                Features include able to do searches using ID number, name, and diagnosis. On todo list: search using date admitting or discharged.
+                </p>
+            </div>
+        </section>
+
+        <section class="patientdb flex flex-jc-c flex-ai-c">
+            
+            <div class="patientdb__card container--all container--wrapper">
+                <div class="patientdb__image"></div>
+                <h1 class="container--margin-bottom-sm">PatientDB</h1>
+                <form action="{{ url_for('main.search') }}" method="get">
+                    <input class="container--margin-bottom-sm container--input-padding" 
+                        type="text" name="query" id="" placeholder="Search...">
+                    <input class="container--input-padding" type="submit" value="Submit">
+                </form>
+            </div>
+        </section>
+    </div>
+{% endblock %}

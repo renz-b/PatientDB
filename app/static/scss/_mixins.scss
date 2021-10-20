@@ -1,0 +1,22 @@
+@media (min-width: 64em){
+    // content
+}
+
+//sass map
+// solved by dividing 16 to, 640, 1024, 1400
+$breakpoints-up: ("medium": "40rem", "large": "64rem", "xlarge": "87.5rem");
+
+// 639, 1023, 1399
+$breakpoints-down: ("small": "39.9375rem", "medium": "63.9375rem", "large": "87.4375rem");
+
+@mixin breakpoint-up($size){
+    @media (min-width: map-get($breakpoints-up, $size )){
+        @content;
+    }
+}
+
+@mixin breakpoint-down($size){
+    @media (max-width: map-get($breakpoints-down, $size )){
+        @content;
+    }
+}

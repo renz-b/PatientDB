@@ -1,0 +1,113 @@
+.header {
+    position: sticky;
+    top: 0px;
+
+    &.open {
+
+        .header__toggle {
+            > span:first-child {
+                transform: rotate(45deg);
+            }
+            > span:nth-child(2) {
+                opacity: 0;
+            }
+            > span:last-child {
+                transform: rotate(-45deg);
+            }
+        }
+
+    }
+
+    .overlay {
+        opacity: 0;
+        position: fixed;
+        top: 3.125rem;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-image: linear-gradient($lightGray, transparent);
+    }
+    nav {
+        position: relative;
+        padding-top: 0.6875rem;
+        padding-bottom: 0.6875rem; 
+        background-color: $darkBlue;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    &__logo {
+        width: 8.6875rem;
+        height: 1.75rem;
+    }
+
+    &__toggle { //hamburger menu
+        > span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background-color:  $lightGray;
+            transition: all 300ms ease-in-out;
+            transform-origin: 1px 1px;
+            &:not(:last-child) {
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    &__menu {
+        position: absolute;
+        width: calc(100% - 3rem);
+        left: 50%;
+        transform: translate(-50%);background: $darkBlue;
+        padding: 1.625rem;
+        border-radius: 5px;
+        margin-top: 1.5rem;
+        background: #fff;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+
+        a {
+            display: block; 
+            color: $darkBlue;
+            padding: .635rem;
+            text-align: center;
+            transition: color 300ms ease-in-out;
+
+            &:hover {
+                color: $yellow;
+
+            }
+        }
+    }
+    &__links {
+        a {
+            transition: color 300ms ease-in-out;
+            position: relative;
+
+            &:not(:last-child) {
+                margin-right: 2.5rem;
+            }
+
+            &::before {
+                position: absolute;
+                content: "";
+                display: block;
+                height: 3px;
+                left: 0;
+                right: 0;
+                background-color: $yellow;
+                bottom: -17px;
+                opacity: 0;
+                transition: opacity 300ms ease-in-out;
+            }
+            
+            &:hover {
+                color: $yellow;
+                
+                &::before {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
