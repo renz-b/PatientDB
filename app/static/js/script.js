@@ -23,3 +23,8 @@ btnHamburger.addEventListener("click", function(){
 
     }
 })
+
+function textAreaAdjust(element) {
+    element.style.height = "auto";
+    element.style.height = (10+element.scrollHeight)+"px";
+}

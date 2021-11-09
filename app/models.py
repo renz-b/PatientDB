@@ -1,4 +1,5 @@
 # base models, need to import db from instantiated create_app class later
+from flask import current_app 
 import datetime
 from os import remove
 
@@ -7,15 +8,16 @@ from app.search import add_to_index, remove_from_index, query_index
 
 class SearchableMixin(object):
     @classmethod
-    def search(cls, expression, page, per_page):
-        ids, total = query_index(cls.__tablename__, expression, page, per_page)
+    def search(cls, expression, page, per_page, min_score=0.1):
+        ids, total, score = query_index(cls.__tablename__, expression, page, per_page, 
+            min_score)
         if total == 0:
-            return cls.query.filter_by(id=0), 0
+            return cls.query.filter_by(id=0), 0, 0 #last zero is a score of 0 if results return none
         when = []
         for i in range(len(ids)):
             when.append((ids[i], i))
         return cls.query.filter(cls.id.in_(ids)).order_by(
-            db.case(when, value=cls.id)), total
+            db.case(when, value=cls.id)), total, score
     
     @classmethod
     def before_commit(cls, session):
@@ -51,16 +53,19 @@ diagnosisTable = db.Table("diagnosis_patient",
 
 class Patient(SearchableMixin, db.Model):
     __tablename__ = "patient"
-    __searchable__=["first_name", "last_name"]
-    id = db.Column(db.Integer, primary_key=True)
+    __searchable__=["first_name", "last_name", "middle_name", "age"]
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(64), nullable=False)
     last_name = db.Column(db.String(64), nullable=False)
+    middle_name = db.Column(db.String(64), nullable=False)
+    age = db.Column(db.Integer(), nullable=False)
     name_suffix = db.Column(db.String(4))
     address = db.Column(db.String(128), nullable=False)
     email_address = db.Column(db.String(128), unique=True, nullable=False)
     phone_number = db.Column(db.Integer(), nullable=False)
     date_added = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
 
+    #MISSING IN MODELS BIRTHDAY. Please remove age. Please add Male or female
     history = db.relationship(
         "History",
         backref="patient",
@@ -121,7 +126,7 @@ class Patient(SearchableMixin, db.Model):
     
 class History(db.Model):
     __tablename__ = "history"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     hpi = db.Column(db.Text)
     pmh = db.Column(db.Text)
     fh = db.Column(db.Text)
@@ -135,7 +140,7 @@ class History(db.Model):
 
 class Diagnosis(db.Model):
     __tablename__ = "diagnosis"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     disease = db.Column(db.String(256), unique=True, nullable=False)
 
     def __repr__(self):

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block head %}
+
+<title>Add Patient</title>
+
+{% endblock %}
+
+{% block content %}
+
+<container class="display-block flex-fill-height bg-grey">
+    <div class="flex flex-auto-height bg-grey">
+    <div class="flex-jc-c patientdb container--all">
+    <div class="patientdb__card container--wrapper">
+        <form method="post" class="container--all" id="general_data_form">
+            <h3 class="container--margin-bottom-sm">General Data</h3>
+            {{ form.hidden_tag() }}
+            {{ render_field(form.first_name, placeholder="First name", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form.last_name, placeholder="Last name", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form.middle_name, placeholder="Middle name", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form.name_suffix, placeholder="Jr., Sr., III, etc. (Leave blank if none)", class="container--input-padding container--margin-bottom-sm ") }}
+            {{ render_field(form.age, placeholder="Age", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form.submit, class="container--input-padding", id="general_data_submit") }}
+            <p id="messages_from_ajax" style="display: none;"></p>
+        </form>
+        
+        <div id="table_similar_patients"></div>
+    </div>
+    </div>
+    </div>
+</container>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+
+{% endblock %}

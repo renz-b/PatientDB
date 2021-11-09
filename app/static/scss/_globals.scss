@@ -14,6 +14,9 @@ body {
     font-size: $font-sm;
     line-height: 1.5;
 
+    ::placeholder {
+        font-family: 'Public Sans', sans-serif;
+    }
     &.noscroll {
         overflow: hidden;
     }
@@ -27,6 +30,9 @@ a, a:visited, a:hover {
     text-decoration: none;
     color: $lightGray;
 }
+.bg-grey {
+    background-image: radial-gradient(circle, $lightGray, $veryLightgray);
+}
 
 // Spacing
 .container {
@@ -39,6 +45,17 @@ a, a:visited, a:hover {
 
     &--pb {
         padding-bottom: 1.5rem;
+    }
+
+    &--pb-sm {
+        padding-bottom: 0.5rem;
+    }
+
+    &--pr {
+        padding-right: 1.5rem;
+    }
+    &--pl {
+        padding-left: 1.5rem;
     }
     &--all {
         padding-left: 1.5rem;
@@ -55,21 +72,34 @@ a, a:visited, a:hover {
         margin-bottom: 0.5rem;
     }
 
+    &--margin-right {
+        margin-right: 0.75rem;
+    }
+
+    &--margin-left {
+        margin-left: 0.75rem;
+    }
+
     &--input-padding {
         padding: 0.1875rem 0.4375rem 0.1875rem 0.4375rem;
     }
 }
 // flexbox
-
+.display-block {
+    display: block;
+}
 .flex {
-    @include breakpoint-up(large) {
-        flex-direction: row;
-    }
-
-    @include breakpoint-down(medium) {
-        flex-direction: column;
-    }
     display: flex;
+
+    &-bp {
+        @include breakpoint-up(large) {
+            flex-direction: row;
+        }
+
+        @include breakpoint-down(medium) {
+            flex-direction: column;
+        }        
+    }
 
     &-jc-sb {
         justify-content: space-between;
@@ -92,7 +122,9 @@ a, a:visited, a:hover {
     &-fill-height {
         height: calc(100vh - 50px);
     }
-
+    &-auto-height {
+        height: auto;
+    }
 }
 
 // visibility
@@ -107,3 +139,16 @@ a, a:visited, a:hover {
         display: none;
     }
 }
+
+.search-bar {
+    width: 18vh;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+dd {
+    margin-left: 1.25rem;
+}
+

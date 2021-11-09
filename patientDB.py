@@ -14,19 +14,3 @@ def make_shell_context():
 
 # tests cli command goes here
 # @app.cli.command()
-
-
-# first todo
-# add at least 3 rows
-# html markup for tables
-# elastisearch functionality
-# ^^^^ DONE ^^^
-
-# todo for tomorrow
-# add css for tables
-# add at least 10 model instances
-# add forms for adding patient
-
-# run elastisearch.exe as admin
-
-# check if reindex function just adds the new added models for __searchable__ or adds on top of it

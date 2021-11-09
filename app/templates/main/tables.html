@@ -6,28 +6,79 @@
 
 {% block content %}
 
-    {% for patient in patients %}
-        {% set v = patient.__dict__ %}
-        {% for val in v.values() %}
-            {{ val }}
-            <br>
-        {% endfor %}
-        {{ patient.history.hpi }}
-        <br>
-    {% endfor %}
+  <container id="tables" class="flex flex-fill-height bg-grey">
+    <div class="flex flex-jc-c container--all patientdb">
 
-    total hits: {{ total }}
+      <div class="patientdb__card">
+        <div class="flex flex-jc-sb container--pt container--pr container--pl 
+          container--margin-bottom-sm">
 
-    <section class="patientdb">
-    <div class="patientdb__card container--all container--wrapper">
-        <div class="patientdb__image"></div>
-        <h1 class="container--margin-bottom-sm">PatientDB</h1>
-        <form action="{{ url_for('main.search') }}" method="get">
-            <input class="container--margin-bottom-sm container--input-padding" 
-                type="text" name="query" id="" placeholder="Search...">
-            <input class="container--input-padding" type="submit" value="Submit">
-        </form>
+          <h3 class="container--pr">
+            {{ total }} {% if total > 1 %}Results {% else %} Result{% endif %}
+            {{ score }}
+          </h3>
+
+          <div>
+            <form action="{{ url_for('main.search') }}" method="get" class="search-bar">
+                <input class="container--input-padding" 
+                      type="text" name="query" id="" placeholder="Search...">
+            </form>
+          </div>
+        </div>
+
+        <div class="container--pr container--pl container--pb">
+
+          <p class="text-align-center">Searching: "{{ query }}"</p>
+          <p class="text-align-center">
+            {% if total_pages > 1 %}
+            Page {{ page }} of {{ total_pages }}
+            {% endif %}
+          </p>
+
+          {% if total == 0 %}
+          <hr>
+          <h4 class="text-align-center">No patients matching your search...</h4>
+          <div class="not_found_image"></div>
+          {% endif %}
+
+          <table class="container--margin-bottom-sm
+            {% if total == 0 %} table_display_none {% endif %}">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Date Added</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for patient in patients %}
+                <tr>
+                  <td data-label="ID">{{ patient.id }}</td>
+                  <td data-label="Name">{{ patient.last_name }}, {{ patient.first_name }}</td>
+                  <td data-label="Age">{{ patient.age }}</td>
+                  <td data-label="Address">{{ patient.address }}</td>
+                  <td data-label="Email">{{ patient.date_added }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+
+          <div class="pagination text-align-center">
+            <a class="container--margin-right 
+            {% if not prev_url %} pagination__disabled {% endif %}" 
+            href="{{ prev_url or '#' }}">
+              ❮
+            </a>
+            <a class="container--margin-left
+            {% if not next_url %} pagination__disabled {% endif %}" 
+            href="{{ next_url or '#' }}">
+              ❯
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-    </section>
-
+  </container>
 {% endblock %}

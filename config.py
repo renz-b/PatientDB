@@ -7,6 +7,10 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SSL_REDIRECT = False
     ELASTICSEARCH_URL = os.environ.get("ELASTICSEARCH_URL")
+    ES_MIN_SCORE = 0.1 #CHANGE IN MODELS.PY this is not global
+    #not global hardcoded into search.py query function min_score default value
+    #when setting a variable using current_app.config throws a working outside context error
+    POSTS_PER_PAGE = 5
 
     @staticmethod
     def init_app(app):
