@@ -61,7 +61,7 @@ $(document).ready(function() {
             data : { first_name : first_name, last_name : last_name, middle_name : middle_name,
                 name_suffix : name_suffix, age : age, address : address, email_address : email_address,
                 phone_number : phone_number, hpi : hpi, pmh : pmh, fh : fh, psh : psh, obh : obh,
-            pe : pe, final_diagnosis : final_diagnosis }
+                pe : pe, final_diagnosis : final_diagnosis }
         });
 
         req.done(function(data) {

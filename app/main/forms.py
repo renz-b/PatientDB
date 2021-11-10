@@ -4,7 +4,7 @@ from wtforms import StringField, IntegerField, SubmitField, TextField, TextAreaF
 
 from wtforms.validators import DataRequired, NumberRange, Email
 
-class AddPatientValidator(FlaskForm):
+class AddPatientValidatorForm(FlaskForm):
     first_name = StringField("First Name", validators=[DataRequired()])
     last_name = StringField("last_name", validators=[DataRequired()])
     middle_name = StringField("middle_name", validators=[DataRequired()])
@@ -29,3 +29,6 @@ class FullPatientForm(FlaskForm):
     submit = SubmitField("SubmitForm")
     #think of a way to dynamically create a list of available diagnosis like what i did in the subjects category for quicktest
     #and also dynamically commit in same page a diagnosis if not found on list
+
+class EditPatientForm(AddPatientValidatorForm, FullPatientForm):
+    submit = SubmitField("edit patient")

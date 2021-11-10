@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<container class="display-block flex-fill-height bg-grey">
+    <div class="flex flex-auto-height bg-grey">
+    <div class="flex-jc-c patientdb container--all">
+    <div class="patientdb__card container--wrapper">
+        <form method="POST" class="container--all" action="{{ url_for('main.patient_update', id=patient.id) }}">
+            <h3 class="container--margin-bottom-sm">General Data</h3>
+            {{ form.hidden_tag() }}
+            {{ render_field(form.first_name, placeholder="First name", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form.last_name, placeholder="Last name", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form.middle_name, placeholder="Middle name", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form.name_suffix, placeholder="Jr., Sr., III, etc. (Leave blank if none)", class="container--input-padding container--margin-bottom-sm ") }}
+            {{ render_field(form.age, placeholder="Age", class="container--input-padding container--margin-bottom-sm") }}
+            <p id="messages_from_ajax" style="display: none;"></p>
+        </form>
+        
+        <div id="table_similar_patients">
+                    <form method="post" id="full_form_submit" class="container--pr container--pl container--pb bg">
+
+            <h3 class="container--margin-bottom-sm">Additional Information</h3>
+            {{ form.hidden_tag() }}
+            {{ render_field(form2.address, placeholder="Address", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form2.email_address, placeholder="Email", class="container--input-padding container--margin-bottom-sm") }}
+            {{ render_field(form2.phone_number, placeholder="Contact Number", class="container--input-padding container--margin-bottom-sm") }}
+
+            <h3 class="container--margin-bottom-sm">History</h3>
+            <div class="tooltip">
+                {{ render_field(form2.hpi, placeholder="History of Present Illness", class="container--input-padding container--margin-bottom-sm", onkeyup="textAreaAdjust(this)") }}
+                <span class="tooltiptext">History of Present Illness</span>
+            </div>
+            <div class="tooltip">
+                {{ render_field(form2.pmh, placeholder="Past Medical History", class="container--input-padding container--margin-bottom-sm") }}
+                <span class="tooltiptext">Past Medical History</span>
+            </div>
+
+            <div class="tooltip">
+                {{ render_field(form2.fh, placeholder="Family History", class="container--input-padding container--margin-bottom-sm") }}
+                <span class="tooltiptext">Family History</span>
+            </div>
+
+            <div class="tooltip">
+                {{ render_field(form2.psh, placeholder="Personal Social History", class="container--input-padding container--margin-bottom-sm") }}
+                <span class="tooltiptext">Personal Social History</span>
+            </div>
+
+            <!-- Add if statement if M or F to hide or show OB history text area field -->
+            <div class="tooltip">
+                {{ render_field(form2.obh, placeholder="Obstetric History", class="container--input-padding container--margin-bottom-sm") }}
+                <span class="tooltiptext">Obstetric History</span>
+            </div>
+
+            <h3 class="container--margin-bottom-sm">Physical Exam</h3>
+
+            <div class="tooltip">
+                {{ render_field(form2.pe, placeholder="Physical Examination", class="container--input-padding container--margin-bottom-sm") }}
+                <span class="tooltiptext">Physical Exam</span>
+            </div>
+
+            <hr>
+
+            <div class="tooltip">
+                {{ render_field(form2.final_diagnosis, placeholder="Diagnosis", class="container--input-padding container--margin-bottom-sm") }}
+                <span class="tooltiptext">Diagnosis</span>
+            </div>
+
+            {{ render_field(form.submit, class="container--input-padding") }}
+        </form>
+        </div>
+    </div>
+    </div>
+    </div>
+    
+</container>
+
+
+
+{% endblock %}

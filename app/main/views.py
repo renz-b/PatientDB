@@ -1,7 +1,7 @@
 from operator import add
 from flask import render_template, url_for, request, current_app, jsonify, redirect
 from . import main
-from .forms import AddPatientValidator, FullPatientForm
+from .forms import AddPatientValidatorForm, FullPatientForm, EditPatientForm
 from ..models import Patient, History, Diagnosis
 from .. import db
 
@@ -30,7 +30,7 @@ def about():
 
 @main.route("/add_patient", methods=["GET", "POST"])
 def add_patient():
-    form = AddPatientValidator()
+    form = AddPatientValidatorForm()
     return render_template("main/patient_form.html", form=form)
 
 @main.route("/all_patients", methods=["GET"])
@@ -43,25 +43,26 @@ def all_patients():
 
 @main.route("/similar_patient", methods=["POST"])
 def similar_patient():
-    elastic_check_for_emptydb = Patient.query.all()
+    try:
+        q = f"{request.form['first_name']} {request.form['last_name']} {request.form['middle_name']} {request.form['age']}"
+        page = request.args.get("page", 1, type=int)
+        patients, total, score = Patient.search(
+        q, page, current_app.config["POSTS_PER_PAGE"], min_score=0.8)
+        total_pages = int(total/current_app.config["POSTS_PER_PAGE"])
+        
+        if total == 0:
+            form = FullPatientForm()
+            return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "No patient found with same name. Please complete form." }) #change this after making html form for diagnosis and history
 
-    if elastic_check_for_emptydb == []:
-        form = FullPatientForm()
-        return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "No patient found with same name. Please complete form." }) #change this after making html form for diagnosis and history
+        return render_template("main/section_table.html", patients=patients, total=total, 
+            query=q, page=page, total_pages=total_pages, score=score)        
+    except:
+        elastic_check_for_emptydb = Patient.query.all()
+
+        if elastic_check_for_emptydb == []:
+            form = FullPatientForm()
+            return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "Database empty." }) #change this after making html form for diagnosis and history
     
-    q = f"{request.form['first_name']} {request.form['last_name']} {request.form['middle_name']} {request.form['age']}"
-    page = request.args.get("page", 1, type=int)
-    patients, total, score = Patient.search(
-    q, page, current_app.config["POSTS_PER_PAGE"], min_score=0.8)
-    total_pages = int(total/current_app.config["POSTS_PER_PAGE"])
-    
-    if total == 0:
-        form = FullPatientForm()
-        return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "No patient found with same name. Please complete form." }) #change this after making html form for diagnosis and history
-
-    return render_template("main/section_table.html", patients=patients, total=total, 
-        query=q, page=page, total_pages=total_pages, score=score)
-
 
 @main.route("/commit_patient", methods=["POST"])
 def commit_patient():
@@ -93,3 +94,22 @@ def commit_patient():
         return jsonify({ 'message': "success! Committed!", "redirect" : url_for('main.index') })
     
 #update patient watch red eyed coder video number 8 for update patient use that
+
+@main.route("/patient/<id>")
+def patient(id):
+    patient = Patient.query.filter_by(id=id).first_or_404()
+    return render_template("main/patient_details.html", patient=patient)
+
+@main.route("/patient/<id>/edit", methods=["POST", "GET"])
+def patient_update(id):
+    patient = Patient.query.filter_by(id=id).first()
+    history = patient.history
+
+    if request.method == "POST":
+        form = AddPatientValidatorForm(formdata=request.form, obj=patient)
+        form.populate_obj(patient)
+        db.session.commit()
+        return redirect(url_for("main.patient", id=patient.id))
+    form = AddPatientValidatorForm(obj=patient)
+    form2 = FullPatientForm(obj=history)
+    return render_template("main/patient_update.html", patient=patient, form=form, form2=form2)

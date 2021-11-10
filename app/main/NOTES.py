@@ -1,7 +1,3 @@
-
-
-
-
     #wtforms for forms
     #first form includes first name last name middle initial DONE
     #queries database if there is duplicate and show list of hits DONE
@@ -38,9 +34,9 @@
 # 8. use ajax jquery to display the search if there is a similar patient after query DONE
 
 # TODO FOR TODAY:
-# 1. Finish Form
+# 1. Finish Form DONE
 # 2. Hard code diagnosis entries figure out how to dynamically produce selectfields later and try to use ajax jquery to update selectfield if possible if not idk
-# 3. Try and commit first model from front end... LETS GOOOOO
+# 3. Try and commit first model from front end... LETS GOOOOO DOOOOOOOOOONEEEEEEEEEEE
 
 #NOTES:
 # run elastisearch.exe as admin
@@ -58,10 +54,16 @@
 
 
 
-
 # TOO TIRED TO PLASTAR MY THINKING
 # DONE I COMMITTED ITS SOMETHING!!
 # but few errors tho:
-# elastic does not like it if you commit on empty database after create_table
+# elastic does not like it if you commit on empty database after create_table DONE did a try except block so that I would not query database each time similar_patient function is called
 # but i fixed it with an if statement at similar_patient
 # problem with validation how to check or query database if input already exists that is a problem for tomorow
+# unique constraint was only found on email I removed it since anyone can have the same email maybe in flask login in the future to query if there is similar
+
+
+#TODO Nov 10
+# 1. Create 2 view functions: one for viewing patient details including everythin, second the one in the youtube video where the form is already populated by the User model 
+# 2. 2 new HTML and SCSS for the view functions
+# 3. Create link in the tables.html to view patient details

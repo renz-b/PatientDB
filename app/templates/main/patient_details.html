@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for field in patient.__table__.columns.keys() %}
+    {{ field }} :: {{ patient[field] }} <hr>
+{% endfor %}
+{% for field in patient.history.__table__.columns.keys() %}
+    {{ field }} :: {{ patient.history[field ]}} <hr>
+{% endfor %}
+
+{% endblock %}

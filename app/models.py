@@ -61,7 +61,7 @@ class Patient(SearchableMixin, db.Model):
     age = db.Column(db.Integer(), nullable=False)
     name_suffix = db.Column(db.String(4))
     address = db.Column(db.String(128), nullable=False)
-    email_address = db.Column(db.String(128), unique=True, nullable=False)
+    email_address = db.Column(db.String(128), nullable=False)
     phone_number = db.Column(db.Integer(), nullable=False)
     date_added = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
 
