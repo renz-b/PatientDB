@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 
 {% block head %}
+{% if request.endpoint == 'main.all_patients' %}
+  <title>All Patients</title>
+{% endif %}
 <title>Results</title>
 {% endblock %}
 
 {% block content %}
-
-  <container id="tables" class="flex flex-fill-height bg-grey">
+<container class="display-block flex-fill-height bg-grey">
+  <div id="tables" class="flex flex-auto-height bg-grey">
     <div class="flex flex-jc-c container--all patientdb">
-
       <div class="patientdb__card">
         <div class="flex flex-jc-sb container--pt container--pr container--pl 
           container--margin-bottom-sm">
@@ -21,14 +23,17 @@
           <div>
             <form action="{{ url_for('main.search') }}" method="get" class="search-bar">
                 <input class="container--input-padding" 
-                      type="text" name="query" id="" placeholder="Search...">
+                      type="text" name="query" id="" placeholder="Search..." autocomplete="off">
             </form>
           </div>
         </div>
 
         <div class="container--pr container--pl container--pb">
-
+          {% if request.endpoint == 'main.search' %}
           <p class="text-align-center">Searching: "{{ query }}"</p>
+          {% elif request.endpoint == 'main.all_patients' %}
+          <p class="text-align-center">All Patients</p>
+          {% endif %}
           <p class="text-align-center">
             {% if total_pages > 1 %}
             Page {{ page }} of {{ total_pages }}
@@ -56,7 +61,7 @@
                 {% for patient in patients %}
                 <tr>
                   <td data-label="ID">{{ patient.id }}</td>
-                  <td data-label="Name">{{ patient.last_name }}, {{ patient.first_name }}</td>
+                  <td data-label="Name"><a href="{{ url_for('main.patient', id=patient.id) }}" class="patient_link">{{ patient.last_name }}, {{ patient.first_name }}</a></td>
                   <td data-label="Age">{{ patient.age }}</td>
                   <td data-label="Address">{{ patient.address }}</td>
                   <td data-label="Email">{{ patient.date_added }}</td>
@@ -67,18 +72,19 @@
 
           <div class="pagination text-align-center">
             <a class="container--margin-right 
-            {% if not prev_url %} pagination__disabled {% endif %}" 
-            href="{{ prev_url or '#' }}">
+            {% if not prev_url.has_prev %} pagination__disabled {% endif %}" 
+            href="{{ url_for('main.all_patients', page=next_url.prev_num) }}">
               ❮
             </a>
             <a class="container--margin-left
-            {% if not next_url %} pagination__disabled {% endif %}" 
-            href="{{ next_url or '#' }}">
+            {% if not next_url.has_next %} pagination__disabled {% endif %}" 
+            href="{{ url_for('main.all_patients', page=next_url.next_num, error_out=False) }}">
               ❯
             </a>
           </div>
         </div>
       </div>
     </div>
-  </container>
+  </div>
+</container>
 {% endblock %}

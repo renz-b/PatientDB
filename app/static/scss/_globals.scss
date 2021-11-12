@@ -33,7 +33,11 @@ a, a:visited, a:hover {
 .bg-grey {
     background-image: radial-gradient(circle, $lightGray, $veryLightgray);
 }
-
+// change patientdb card bg to lightgrey
+div.bg-lightgrey {
+    background-color: $veryLightgray;
+    color: $verydarkGray;
+}
 // Spacing
 .container {
     padding-left: 1.5rem;
@@ -140,6 +144,8 @@ a, a:visited, a:hover {
     }
 }
 
+// others
+
 .search-bar {
     width: 18vh;
 }
@@ -152,3 +158,20 @@ dd {
     margin-left: 1.25rem;
 }
 
+.inline-block {
+    display: inline-block;
+
+    &-float-right {
+        float: right;
+    }
+}
+
+.justify {
+    margin-left: 1.875rem;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+:focus-visible {
+    outline:none;
+}

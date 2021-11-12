@@ -67,3 +67,29 @@
 # 1. Create 2 view functions: one for viewing patient details including everythin, second the one in the youtube video where the form is already populated by the User model 
 # 2. 2 new HTML and SCSS for the view functions
 # 3. Create link in the tables.html to view patient details
+
+#TODO Nov 11
+# 1. CSS for patient details html
+# 2. Change age to birthday and calculate on render, add gender to forms and html
+# 3. if statement in forms for OB history if male or female
+# 4. try ajax to update patient details without refresh? possible?
+
+# 5. too tired to fully fix (pagination  in allpatients requires pagination object to be called in the template and not in the view function)
+# 6. all patients html does not scroll properly change height to auto later
+
+#TODO NOV 12
+# 1. Do the diagnosis
+# 2. Use jquery flexdata list download and implement
+# 3. add a query to similar patient of diagnosis and pass it to render template
+# 4. add html and jquery for diagnosis
+# 5. add Show all results on focus but place button if diagnosis is not there add diagnosis
+# 6. add autocomplete=off on form tags so that previously submitted values are not saved
+
+# NOTES:
+# in final_diagnosis it shows a class repr format but i changed the backref lazy to dynamic it still shows repr due to its already committed it will change back tp shpowing only the disease when i drop the db
+
+# Nov 12 Notes:
+# data list done only needs css and positioning left, also did the referring buttons and made it correctly redirect, class bg-verylightgray not working
+# left to do is to drop database -> change age to birthday render age according to birthday
+# clean up code when done some variables are confusing
+# diagnosis del patient and upate patient seem repeptitive try to use only one function and use an if statement

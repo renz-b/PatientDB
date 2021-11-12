@@ -14,7 +14,8 @@ assets = Environment()
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
-    config[config_name].init_app(app) 
+    config[config_name].init_app(app)
+    app.jinja_env.filters["zip"] = zip
 
     db.init_app(app)
     assets.init_app(app)

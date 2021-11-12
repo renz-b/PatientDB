@@ -36,7 +36,7 @@ class SearchableMixin(object):
             if isinstance(obj, SearchableMixin):
                 add_to_index(obj.__tablename__, obj)
         for obj in session._changes['delete']:
-            if isinstance(obj.__tablename__, obj):
+            if isinstance(obj.__tablename__, type(obj)):
                 remove_from_index(obj.__tablename__, obj)
         session._changes = None
 
@@ -76,8 +76,8 @@ class Patient(SearchableMixin, db.Model):
     final_diagnosis = db.relationship(
         "Diagnosis",
         secondary=diagnosisTable,
-        lazy=True,
-        backref=db.backref("patient", lazy=True)
+        lazy="dynamic",
+        backref=db.backref("patient", lazy="dynamic")
     )
 
     # admissions = db.relationship(

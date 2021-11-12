@@ -108,19 +108,27 @@ table {
   background-position: center;
 }
 
-  .pagination {
-    a {
-      color: black;
-      font-size: $font-vsm;
-      padding: 4px 8px;
-      transition: background-color 300ms;
-      border: 1px solid $darkGray;
+.pagination {
+  a {
+    color: black;
+    font-size: $font-vsm;
+    padding: 4px 8px;
+    transition: background-color 300ms;
+    border: 1px solid $darkGray;
 
-      &:hover {
-        background-color: $darkGray;
-        }
-      }
-      &__disabled {
-        display: none;
+    &:hover {
+      background-color: $darkGray;
       }
     }
+    &__disabled {
+      display: none;
+    }
+}
+
+a.patient_link {
+  color: $purple;
+
+  &:hover {
+    color: $darkGray;
+  }
+}

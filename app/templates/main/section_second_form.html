@@ -3,11 +3,8 @@
 <div>
         <form method="post" id="full_form_submit" class="container--pr container--pl container--pb bg">
 
-            <h3 class="container--margin-bottom-sm">Additional Information</h3>
             {{ form.hidden_tag() }}
-            {{ render_field(form.address, placeholder="Address", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.email_address, placeholder="Email", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.phone_number, placeholder="Contact Number", class="container--input-padding container--margin-bottom-sm") }}
+
 
             <h3 class="container--margin-bottom-sm">History</h3>
             <div class="tooltip">
@@ -49,7 +46,8 @@
                 <span class="tooltiptext">Diagnosis</span>
             </div>
 
+
+
             {{ render_field(form.submit, class="container--input-padding") }}
         </form>
 </div>
-

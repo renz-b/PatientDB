@@ -1,11 +1,62 @@
 {% extends "base.html" %}
+{% block head %}
+<title>Patient: {{ general_data_values[0] }}</title>
+{% endblock %}
 
 {% block content %}
-{% for field in patient.__table__.columns.keys() %}
-    {{ field }} :: {{ patient[field] }} <hr>
-{% endfor %}
-{% for field in patient.history.__table__.columns.keys() %}
-    {{ field }} :: {{ patient.history[field ]}} <hr>
-{% endfor %}
+<container class="display-block flex-fill-height bg-grey">
+    <div class="patientdb flex flex-auto-height flex-jc-c container--all bg-grey">
+        <div class="patientdb__card container--all bg-verylightgrey">
+            <section>
+            <h3 class="inline-block container--pb-sm">General Data</h3>  
+              
+            <a href="{{ url_for('main.patient_update', id=patient.id) }}" class="inline-block inline-block-float-right container--margin-left">
+                <input type="button" class="container--input-padding" value="Edit Patient">
+            </a>            
+            
+            <a href="{{ url_for('main.all_patients', page=session['prev_page']) }}" class="inline-block inline-block-float-right">
+                <input type="button" class="container--input-padding" value="Back">
+            </a>
+            {% for k, v in general_data_keys|zip(general_data_values) %}
+                <dd> <b>{{ k }}: </b>{{ v }}</dd>
+            {% endfor %}
 
+            <hr>
+
+            <h3 class="container--pb-sm">History</h3>
+            {% for k, v in history_keys|zip(history_values) %}
+                <dd> <b> {{ k }}</b></dd>
+                <p class="container--pb justify" id=>&nbsp;&nbsp;&nbsp;&nbsp;{{ v }}</p>
+            {% endfor %}
+
+            <h3 class="container--pb-sm">Diagnosis</h3>
+            <dd> <b>Final Diagnosis:</b></dd>     
+            <dd id="final_diagnosis">
+                {% for d in final_diagnosis.values() %}
+                {{ d }}
+                {% endfor %}
+            </dd>
+        </section>
+<input type="button" id="diagnosis_add" value="Add">
+<input type="button" id="diagnosis_delete" value="Delete">
+<form action="" method="get" id="diagnosis_datalist">
+    <label for="diagnosis">Choose:</label>
+    <input list="diagnosis" name="" id="diagnosisInputValue">
+    <datalist id="diagnosis">
+        {% for i in diagnosis_select %}
+        <option value="{{ i.disease }}">
+        {% endfor %}
+    </datalist>
+    
+</form>
+<input type="button" name="{{ patient_id }}" id="diagnosis_submit" value="Add to Diagnosis">
+<input type="button" name="{{ patient_id }}" id="diagnosis_deletefrompatient" value="Remove from Diagnosis">
+        <p id="messages">
+
+
+        </p>
+    </div>
+</container>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/jquery_datalist.js') }}"></script>
 {% endblock %}
