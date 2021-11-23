@@ -1,3 +1,4 @@
+// responsive menu
 const fadeElems = document.querySelectorAll('.has-fade');
 const header = document.querySelector(".header");
 const overlay = document.querySelector(".overlay");
@@ -24,7 +25,3 @@ btnHamburger.addEventListener("click", function(){
     }
 })
 
-function textAreaAdjust(element) {
-    element.style.height = "auto";
-    element.style.height = (10+element.scrollHeight)+"px";
-}

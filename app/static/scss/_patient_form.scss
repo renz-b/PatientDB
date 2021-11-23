@@ -3,6 +3,12 @@
 }
 
 .tooltip .tooltiptext {
+    @include breakpoint-down(medium) {
+        padding: 2px;
+        font-size: $font-tenpx;
+        width: 4.5rem;
+        right:100%;
+    }
     position: absolute;
 
     z-index: 1;
@@ -13,12 +19,19 @@
     width: 8.125rem;
     background-color: black;
     color: #fff;
-    font-size: $font-tenpx;
+    font-size: $font-vsm;
     text-align: center;
-    padding: 3px 0;
+    padding: 3px;
     border-radius: 4px;
     opacity: 0;
     transition: 400ms ease-in-out;
+
+    &--help {
+        left: 52.5%;
+        top: -43px;
+        margin-left: -60px;
+        width: 24.125rem;
+    }
 }
 
 .tooltip:hover .tooltiptext {
@@ -27,6 +40,51 @@
 
 textarea {
     overflow: hidden;
-
 }
 
+input.datalist {
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid $darkGray;
+    padding: 4px;
+    font-size: 12px;
+    font-family: inherit;
+}
+
+form.diagnosis_datalist {
+    flex: 2;
+    margin-right: 0.3125rem;
+}
+
+input[type=button].update-diagnosis-list {
+        color: $darkGray;
+        background: none;
+        font-size: $font-vsm;
+        border: 1px solid $darkGray;
+        border-radius: 2px;
+        box-shadow: none;
+        transition: 300ms ease-in-out;
+
+        &:hover {
+            color: #fff;
+            background-color: $darkGray;
+        }
+}
+
+input[type=button].update-diagnosis-patient {
+    background-color: $verydarkGray;
+}
+
+
+p.note {
+    font-style: italic;
+    
+    &--float-r {
+        float: right;
+        color: $brightPurple;
+    }
+}
+
+p.history {
+    white-space: pre-wrap;
+}

@@ -5,9 +5,11 @@
 
 {% block content %}
 <container class="display-block flex-fill-height bg-grey">
-    <div class="patientdb flex flex-auto-height flex-jc-c container--all bg-grey">
-        <div class="patientdb__card container--all bg-verylightgrey">
-            <section>
+    <div class="bg-grey">
+    <div class="flex flex-jc-c patientdb container--all container--wrapper-lg">
+    <div class="patientdb__card bg-verylightgrey">
+        <section class="container--pt container--pr container--pl">
+            <h2 class="text-align-center">{{ general_data_values[0] }} {{ general_data_values[1] }}<br>{{ general_data_values[2] }} y.o., {{ general_data_values[3] }}</h2>
             <h3 class="inline-block container--pb-sm">General Data</h3>  
               
             <a href="{{ url_for('main.patient_update', id=patient.id) }}" class="inline-block inline-block-float-right container--margin-left">
@@ -26,35 +28,64 @@
             <h3 class="container--pb-sm">History</h3>
             {% for k, v in history_keys|zip(history_values) %}
                 <dd> <b> {{ k }}</b></dd>
-                <p class="container--pb justify" id=>&nbsp;&nbsp;&nbsp;&nbsp;{{ v }}</p>
+                <p class="container--pb-sm container--pr justify history" id=>{{ v }}</p>
             {% endfor %}
 
-            <h3 class="container--pb-sm">Diagnosis</h3>
-            <dd> <b>Final Diagnosis:</b></dd>     
+          <hr> 
+            <dd> <b>Diagnosis:</b></dd>     
             <dd id="final_diagnosis">
-                {% for d in final_diagnosis.values() %}
-                {{ d }}
-                {% endfor %}
+                <ul>
+                {% for d in final_diagnosis %}
+                <li>
+                    {{ d.disease }}                   
+                </li>
+
+                {% endfor %}                    
+                </ul>
+
             </dd>
+            <div class="tooltip">
+                <p class="note note--float-r">Help?</p>
+                <span class="tooltiptext tooltiptext--help">To update patient diagnosis use the buttons on the lower left. 
+                <br>If diagnosis is not on the list please add using buttons on the right.</span>
+            </div>            
+            <hr>
+
+           
         </section>
-<input type="button" id="diagnosis_add" value="Add">
-<input type="button" id="diagnosis_delete" value="Delete">
-<form action="" method="get" id="diagnosis_datalist">
-    <label for="diagnosis">Choose:</label>
-    <input list="diagnosis" name="" id="diagnosisInputValue">
-    <datalist id="diagnosis">
-        {% for i in diagnosis_select %}
-        <option value="{{ i.disease }}">
-        {% endfor %}
-    </datalist>
-    
-</form>
-<input type="button" name="{{ patient_id }}" id="diagnosis_submit" value="Add to Diagnosis">
-<input type="button" name="{{ patient_id }}" id="diagnosis_deletefrompatient" value="Remove from Diagnosis">
-        <p id="messages">
+        <div class="container--pl container--pr container--pb">
+            <div class="flex flex-jc-sb flex-ai-c container--pb-sm">
+                <form action="" method="get" id="diagnosis_datalist" class="diagnosis_datalist">
+                    <label for="diagnosis">List of Diagnosis:</label>
+                    
+                    <input list="diagnosis" name="" id="diagnosisInputValue" class="datalist">
+                    
+                    <datalist id="diagnosis">
+                        {% for i in diagnosis_select %}
+                        <option value="{{ i.disease }}">
+                        {% endfor %}
+                    </datalist>
 
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                </form>
 
-        </p>
+                <div class="update-diagnosis-list-buttons flex container--margin-top">
+                    <span><input type="button" class="container--input-padding update-diagnosis-list" id="diagnosis_add" value="Add"></span>
+                    <span><input type="button" id="diagnosis_delete" class="container--input-padding container--margin-left-sm update-diagnosis-list" value="Delete"></span>                        
+                </div>
+
+            </div>
+
+            <div class="update-patient-diagnosis-buttons">
+                <span><input type="button" class="container--input-padding update-diagnosis-patient" name="{{ patient_id }}" id="diagnosis_submit" value="Update"></span>
+                <span><input type="button" class="container--input-padding container--margin-left-sm update-diagnosis-patient" name="{{ patient_id }}" id="diagnosis_deletefrompatient" value="Remove"></span>                
+            </div>  
+
+            <p id="messages"></p>    
+                   
+        </div>
+    </div>
+    </div>
     </div>
 </container>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

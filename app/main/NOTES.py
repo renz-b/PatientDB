@@ -93,3 +93,9 @@
 # left to do is to drop database -> change age to birthday render age according to birthday
 # clean up code when done some variables are confusing
 # diagnosis del patient and upate patient seem repeptitive try to use only one function and use an if statement
+
+# Nov 23:
+# 1. Add 2 buttons in add_patient when a similar_patient is found
+# 2. change the return link after commit_patient to patient/id
+# 3. add option to delete patient
+# 4. clean up code

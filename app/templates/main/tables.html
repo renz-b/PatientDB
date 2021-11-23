@@ -62,9 +62,9 @@
                 <tr>
                   <td data-label="ID">{{ patient.id }}</td>
                   <td data-label="Name"><a href="{{ url_for('main.patient', id=patient.id) }}" class="patient_link">{{ patient.last_name }}, {{ patient.first_name }}</a></td>
-                  <td data-label="Age">{{ patient.age }}</td>
+                  <td data-label="Age">{{ patient.age() }}</td>
                   <td data-label="Address">{{ patient.address }}</td>
-                  <td data-label="Email">{{ patient.date_added }}</td>
+                  <td data-label="Email">{{ patient.date_added.strftime("%Y-%m-%d") }}</td>
                 </tr>
                 {% endfor %}
               </tbody>

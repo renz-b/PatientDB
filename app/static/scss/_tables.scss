@@ -132,3 +132,7 @@ a.patient_link {
     color: $darkGray;
   }
 }
+
+label[for="diagnosis"] {
+  font-size: $font-vsm;
+}

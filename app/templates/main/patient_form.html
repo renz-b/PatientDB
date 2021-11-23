@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_formhelpers.html" import render_field %}
+
 
 {% block head %}
 
@@ -12,19 +12,27 @@
 <container class="display-block flex-fill-height bg-grey">
     <div class="flex flex-auto-height bg-grey">
     <div class="flex-jc-c patientdb container--all">
-    <div class="patientdb__card container--wrapper">
+    <div class="patientdb__card container--wrapper-lg">
         <form method="post" class="container--all" id="general_data_form">
             <h3 class="container--margin-bottom-sm">General Data</h3>
-            {{ form.hidden_tag() }}
-            {{ render_field(form.first_name, placeholder="First name", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.last_name, placeholder="Last name", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.middle_name, placeholder="Middle name", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.address, placeholder="Address", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.email_address, placeholder="Email", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.phone_number, placeholder="Contact Number", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.name_suffix, placeholder="Jr., Sr., III, etc. (Leave blank if none)", class="container--input-padding container--margin-bottom-sm ") }}
-            {{ render_field(form.age, placeholder="Age", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.submit, class="container--input-padding", id="general_data_submit") }}
+            {% for field in form %}
+
+            {% if field.name == "first_name" %} <div class="flex flex-flex-wrap"> {% endif %}
+            {% if field.name == "birthday" %} <div class="break"></div>{% endif %}
+            <dd 
+                {% if field.name in ["first_name", "last_name", "middle_name", "name_suffix", "email_address", "phone_number"] %}
+                class="flex-flex-grow" {% endif %}
+            >
+
+                {% if field.name in ["gender", "birthday"] %}
+                    {{ field.label }}
+                {% endif %}            
+            {{ field(class="container--input-padding container--margin-bottom-sm") }}</dd>
+            {% if field.name == "gender" %} <div class="break"></div>{% endif %}
+            {% if field.name == "phone_number" %} </div> {% endif %}
+            {% endfor %}
+            
+            <dd><input id="general_data_submit" class="container--input-padding" type="submit" value="Submit"></dd>
             <p id="messages_from_ajax" style="display: none;"></p>
         </form>
         

@@ -42,7 +42,7 @@
               {% for patient in patients %}
               <tr>
                 <td data-label="ID">{{ patient.id }}</td>
-                <td data-label="Name">{{ patient.last_name }}, {{ patient.first_name }}</td>
+                <td data-label="Name"><a href="{{ url_for('main.patient', id=patient.id) }}" class="patient_link" target="_blank">{{ patient.last_name }}, {{ patient.first_name }}</a></td>
                 <td data-label="Age">{{ patient.age }}</td>
                 <td data-label="Address">{{ patient.address }}</td>
                 <td data-label="Email">{{ patient.date_added }}</td>

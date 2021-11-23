@@ -1,11 +1,14 @@
 $(document).ready(function() {
+    var csrf_token = $("input[name='csrf_token']").val()
     
     $("#diagnosis_add").on('click', function(e){
-        let new_diagnosis = $("#diagnosisInputValue").val()
+        let diagnosis = $("#diagnosisInputValue").val()
         req = $.ajax({
-            url : "/diagnosis_add",
+            url : "/diagnosis_list_update",
             type: "POST",
-            data : { new_diagnosis : new_diagnosis }
+            data : { diagnosis : diagnosis,
+                action : "add",
+                csrf_token : csrf_token }
         });
         req.done(function(data){
             if (data.html) {
@@ -17,11 +20,13 @@ $(document).ready(function() {
     });
 
         $("#diagnosis_delete").on('click', function(e){
-        let del_diagnosis = $("#diagnosisInputValue").val()
+        let diagnosis = $("#diagnosisInputValue").val()
         req = $.ajax({
-            url : "/diagnosis_delete",
+            url : "/diagnosis_list_update",
             type: "POST",
-            data : { del_diagnosis : del_diagnosis }
+            data : { diagnosis : diagnosis,
+                action : "delete",
+                csrf_token : csrf_token }
         });
         req.done(function(data){
             if (data.html) {
@@ -37,13 +42,15 @@ $(document).ready(function() {
         let diagnosis = $("#diagnosisInputValue").val()
         let patient_id = $("#diagnosis_submit").attr('name')
         req = $.ajax({
-            url : "/diagnosis_update",
+            url : "/update_patient_diagnosis",
             type: "POST",
             data : { diagnosis : diagnosis,
-                patient_id : patient_id }
+                patient_id : patient_id,
+                action : "add",
+                csrf_token : csrf_token }
         });
         req.done(function(data){
-            if (data.html) {
+            if (data) {
                 $("#final_diagnosis").html(data.html);
                 $("#messages").html(data.message);
                 $("#diagnosisInputValue").val('');
@@ -56,13 +63,15 @@ $(document).ready(function() {
         let diagnosis = $("#diagnosisInputValue").val()
         let patient_id = $("#diagnosis_deletefrompatient").attr('name')
         req = $.ajax({
-            url : "/diagnosis_delete_from_patient",
+            url : "/update_patient_diagnosis",
             type: "POST",
             data : { diagnosis : diagnosis,
-                patient_id : patient_id }
+                patient_id : patient_id,
+                action : "delete",
+                csrf_token : csrf_token }
         });
         req.done(function(data){
-            if (data.html) {
+            if (data) {
                 $("#final_diagnosis").html(data.html);
                 $("#messages").html(data.message);
                 $("#diagnosisInputValue").val('');

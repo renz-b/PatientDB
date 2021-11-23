@@ -1,5 +1,6 @@
 from math import ceil
 from flask import render_template, url_for, request, current_app, jsonify, redirect, session
+from datetime import date, datetime, time
 from werkzeug.urls import url_parse
 from . import main
 from .forms import GeneralDataForm, HistoryForm, FullPatientForm
@@ -47,26 +48,27 @@ def all_patients():
 @main.route("/similar_patient", methods=["POST"])
 def similar_patient():
     try:
-        q = f"{request.form['first_name']} {request.form['last_name']} {request.form['middle_name']} {request.form['age']}"
+        q = f"{request.form['first_name']} {request.form['last_name']} {request.form['middle_name']} {request.form['birthday']}"
         page = request.args.get("page", 1, type=int)
         patients, total, score = Patient.search(
         q, page, current_app.config["POSTS_PER_PAGE"], min_score=0.8)
         total_pages = int(total/current_app.config["POSTS_PER_PAGE"])
         
         if total == 0:
+    
             form = HistoryForm()
             #diagnosis = Diagnosis.query.all() add back to return testing diagnosis in patient_details.html
-            return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "No patient found with same name. Please complete form." }) #change this after making html form for diagnosis and history
-
-        return render_template("main/section_table.html", patients=patients, total=total, 
-            query=q, page=page, total_pages=total_pages, score=score)        
+            return jsonify({ "html" : render_template("main/section_second_form.html", form=form), 'message' : "No patient found with same name. Please complete form." }) #change this after making html form for diagnosis and history
+        else:
+            return render_template("main/section_table.html", patients=patients, total=total, 
+                query=q, page=page, total_pages=total_pages, score=score)        
     except:
         elastic_check_for_emptydb = Patient.query.all()
 
         if elastic_check_for_emptydb == []:
             form = HistoryForm()
             return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "Database empty." }) #change this after making html form for diagnosis and history
-    
+
 
 @main.route("/commit_patient", methods=["POST"])
 def commit_patient():
@@ -75,7 +77,8 @@ def commit_patient():
         last_name = request.form["last_name"]
         middle_name = request.form["middle_name"]
         name_suffix = request.form["name_suffix"] # be wary of None objects find a way to set a default value if none
-        age = request.form["age"]
+        gender = request.form["gender"]
+        birthday = request.form["birthday"]
         address = request.form["address"]
         email_address = request.form["email_address"]
         phone_number = request.form["phone_number"]
@@ -87,17 +90,13 @@ def commit_patient():
         obh = request.form["obh"]
         pe = request.form["pe"]
 
-        final_diagnosis = request.form["final_diagnosis"]
-        # still trying first commit diagnosis still not included
         patient = Patient(first_name=first_name, last_name=last_name, middle_name=middle_name, name_suffix=name_suffix,
-            age=age, address=address, email_address=email_address, phone_number=phone_number)
+            gender=gender, birthday=birthday, address=address, email_address=email_address, phone_number=phone_number)
         history = History(hpi=hpi, pmh=pmh, fh=fh, psh=psh, obh=obh, pe=pe, patient=patient)
         db.session.add(patient)
         db.session.add(history)
         db.session.commit()
         return jsonify({ 'message': "success! Committed!", "redirect" : url_for('main.index') })
-    
-#update patient watch red eyed coder video number 8 for update patient use that
 
 @main.route("/patient/<id>")
 def patient(id):
@@ -106,16 +105,21 @@ def patient(id):
     referrer = url_parse(request.referrer)
     if referrer.path == url_for('main.all_patients'):
         session["prev_page"] = referrer.query[5:6]
+    date_added = patient.date_added.date().strftime("%Y/%b/%d")
+    time_added = patient.date_added.time().strftime("%I:%M %p")
 
     general_data = { 
         "Name": f"{patient.last_name}, {patient.first_name}",
-        "Name Suffix" : "None" if patient.name_suffix == '' else patient.name_suffix,
-        "Age" : patient.age,
+        "Name Suffix" : "" if patient.name_suffix == '' else patient.name_suffix,
+        "Age" : patient.age(),
+        "Gender" : "Male" if patient.gender == "m" else "Female",
+        "Birthday" : patient.birthday.date(),
         "Address" : patient.address,
         "Email" : patient.email_address,
         "Phone Number" : patient.phone_number,
-        "Date Added" : patient.date_added,
+        "Date Added" : f"{date_added} - {time_added}",
     }
+    print(general_data["Date Added"])
     history = {
         "History of Present Illness" : patient.history.hpi,
         "Past Medical History" : patient.history.pmh,
@@ -124,9 +128,8 @@ def patient(id):
         "OB History" : patient.history.obh,
         "Physical Examination" : patient.history.pe
         }
-    final_diagnosis = {
-        "final_diagnosis" : patient.final_diagnosis.all()
-    }
+    final_diagnosis = patient.final_diagnosis.all()
+    
     diagnosis_select = Diagnosis.query.all()
     return render_template("main/patient_details.html", patient=patient, general_data_keys = list(general_data.keys()), 
         general_data_values=list(general_data.values()),
@@ -147,56 +150,56 @@ def patient_update(id):
         db.session.commit()
         return redirect(url_for("main.patient", id=patient.id))
     form = GeneralDataForm(obj=patient)
-    form2 = FullPatientForm(obj=history)
+    form2 = HistoryForm(obj=history)
     return render_template("main/patient_update.html", patient=patient, form=form, form2=form2, referrer=referrer)
 
-@main.route("/diagnosis_update", methods=["POST"])
-def diagnosis_update():
+@main.route("/diagnosis_list_update", methods=["POST"])
+def diagnosis_list_update():
+    if request.method == "POST":
+        action = request.form["action"]
+        diagnosis = request.form["diagnosis"]
+        message = action.capitalize()
+
+        if diagnosis == '':
+            return jsonify({ 'message' : 'no input'})
+        else:    
+            if action == "add":
+                diagnosis_model = Diagnosis(disease=diagnosis)
+                db.session.add(diagnosis_model)
+            else:
+                diagnosis_model = Diagnosis.query.filter_by(disease=diagnosis).first()
+                db.session.delete(diagnosis_model)
+            
+            db.session.commit()
+            diagnosis_query = Diagnosis.query.all()
+            return jsonify({ "html" : render_template("main/section_diagnosis.html", diagnosis_select = diagnosis_query),
+                "message" : f"&#128203; {message}: {diagnosis}." })
+
+@main.route("/update_patient_diagnosis", methods=["POST"])
+def update_patient_diagnosis():
     patient_id = request.form["patient_id"]
     diagnosis = request.form["diagnosis"]
+    action = request.form["action"]
+    print(diagnosis)
 
-    patient_query = Patient.query.filter_by(id=patient_id).first()
-    diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first()
-    
-    patient = patient_query.final_diagnosis.append(diagnosis_query)
-    db.session.add(patient_query)
-    db.session.commit()
+    if diagnosis == '':
+        return jsonify({ 'message' : 'no input'})
+    else:
+        patient_query = Patient.query.filter_by(id=patient_id).first()
+        diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first()
+        try:
+            if action == 'add':
+                patient = patient_query.final_diagnosis.append(diagnosis_query)
+            else:
+                patient = patient_query.final_diagnosis.remove(diagnosis_query)
+            
+            db.session.add(patient_query)
+            db.session.commit()
+        except:
+            return jsonify({ 'message' : '&#128680; Diagnosis not in database.'})
 
-    return jsonify({ 'html' : render_template("main/section_final_diagnosis.html", final_diagnosis = patient_query.final_diagnosis.all()), 'message' : 'Diagnosis Updated'})
+        return jsonify({ 'html' : render_template("main/section_final_diagnosis.html", 
+            final_diagnosis = patient_query.final_diagnosis.all()), 'message' : 'Diagnosis Updated'})
 
-@main.route("/diagnosis_delete_from_patient", methods=["POST"])
-def diagnosis_delete_from_patient():
-    patient_id = request.form["patient_id"]
-    diagnosis = request.form["diagnosis"]
 
-    patient_query = Patient.query.filter_by(id=patient_id).first()
-    diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first()
-
-    patient = patient_query.final_diagnosis.remove(diagnosis_query)
-    db.session.add(patient_query)
-    db.session.commit()
-
-    return jsonify({ 'html' : render_template("main/section_final_diagnosis.html", final_diagnosis = patient_query.final_diagnosis.all()), 'message' : 'Diagnosis Updated'})
-
-@main.route("/diagnosis_add", methods=["POST"])
-def diagnosis_add():
-    if request.method == "POST":
-        new_diagnosis = request.form["new_diagnosis"]
-        diagnosis_model = Diagnosis(disease=new_diagnosis)
-        db.session.add(diagnosis_model)
-        db.session.commit()
-        diagnosis_query = Diagnosis.query.all()
-        return jsonify({ "html" : render_template("main/section_diagnosis.html", diagnosis_select = diagnosis_query),
-            "message" : f"Added diagnosis {new_diagnosis}." })
-    
-@main.route("/diagnosis_delete", methods=["POST"])
-def diagnosis_delete():
-    if request.method == "POST":
-        del_diagnosis = request.form["del_diagnosis"]
-        diagnosis_query_del = Diagnosis.query.filter_by(disease=del_diagnosis).first()
-        db.session.delete(diagnosis_query_del)
-        db.session.commit()
-        diagnosis_query = Diagnosis.query.all()
-        return jsonify({ "html" : render_template("main/section_diagnosis.html", diagnosis_select = diagnosis_query),
-            "message" : f"Deleted diagnosis {del_diagnosis}." })
 

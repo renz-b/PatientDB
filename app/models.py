@@ -1,6 +1,7 @@
 # base models, need to import db from instantiated create_app class later
 from flask import current_app 
 import datetime
+from datetime import date
 from os import remove
 
 from . import db
@@ -53,16 +54,17 @@ diagnosisTable = db.Table("diagnosis_patient",
 
 class Patient(SearchableMixin, db.Model):
     __tablename__ = "patient"
-    __searchable__=["first_name", "last_name", "middle_name", "age"]
+    __searchable__=["first_name", "last_name", "middle_name", "birthday"]
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(64), nullable=False)
     last_name = db.Column(db.String(64), nullable=False)
     middle_name = db.Column(db.String(64), nullable=False)
-    age = db.Column(db.Integer(), nullable=False)
+    birthday = db.Column(db.DateTime(), nullable=False)
+    gender = db.Column(db.String(1), nullable=False) 
     name_suffix = db.Column(db.String(4))
     address = db.Column(db.String(128), nullable=False)
     email_address = db.Column(db.String(128), nullable=False)
-    phone_number = db.Column(db.Integer(), nullable=False)
+    phone_number = db.Column(db.BigInteger(), nullable=False)
     date_added = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
 
     #MISSING IN MODELS BIRTHDAY. Please remove age. Please add Male or female
@@ -79,6 +81,22 @@ class Patient(SearchableMixin, db.Model):
         lazy="dynamic",
         backref=db.backref("patient", lazy="dynamic")
     )
+
+    def age(self):
+        today = date.today()
+        try:
+            birthday = self.birthday.replace(year = today.year)
+            birthday = self.birthday.date()
+        # raised when birth date is February 29
+        # and the current year is not a leap year
+        except ValueError:
+            birthday = birthday.replace(year = today.year,
+                month = birthday.month + 1, day = 1)
+
+        if birthday > today:
+            return today.year - birthday.year - 1
+        else:
+            return today.year - birthday.year
 
     # admissions = db.relationship(
     #     "Admission",

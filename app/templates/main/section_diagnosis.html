@@ -1,8 +1,8 @@
+<label for="diagnosis">List of Diagnosis:</label>
+<input list="diagnosis" name="" id="diagnosisInputValue" class="datalist">
 
-    <label for="diagnosis">Choose:</label>
-    <input list="diagnosis" name="" id="diagnosisInputValue">
-    <datalist id="diagnosis">
-        {% for i in diagnosis_select %}
-        <option value="{{ i.disease }}">
-        {% endfor %}
-    </datalist>
+<datalist id="diagnosis">
+    {% for i in diagnosis_select %}
+    <option value="{{ i.disease }}">
+    {% endfor %}
+</datalist>

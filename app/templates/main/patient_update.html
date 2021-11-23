@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_formhelpers.html" import render_field %}
+
 
 {% block head %}
 <title>Edit Patient</title>
@@ -7,76 +7,40 @@
 
 {% block content %}
 <container class="display-block flex-fill-height bg-grey">
-    <div class="flex flex-auto-height bg-grey">
-    <div class="flex-jc-c patientdb container--all">
+    <div class="bg-grey">
+    <div class="flex flex-jc-c patientdb container--all">
     <div class="patientdb__card container--wrapper">
+
         <form method="POST" class="container--all" action="{{ url_for('main.patient_update', id=patient.id) }}">
             <a href="{{ referrer }}" class="inline-block inline-block-float-right">
                 <input type="button" class="container--input-padding" value="Back">
             </a>
             <h3 class="container--margin-bottom-sm">General Data</h3>
             
-            {{ form.hidden_tag() }}
-            {{ render_field(form.first_name, placeholder="First name", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.last_name, placeholder="Last name", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.middle_name, placeholder="Middle name", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.name_suffix, placeholder="Jr., Sr., III, etc. (Leave blank if none)", class="container--input-padding container--margin-bottom-sm ") }}
-            {{ render_field(form.age, placeholder="Age", class="container--input-padding container--margin-bottom-sm") }}
-            
-            <p id="messages_from_ajax" style="display: none;"></p>
-
-            {{ render_field(form.address, placeholder="Address", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.email_address, placeholder="Email", class="container--input-padding container--margin-bottom-sm") }}
-            {{ render_field(form.phone_number, placeholder="Contact Number", class="container--input-padding container--margin-bottom-sm") }}
+            {% for field in form %}
+                <div class="tooltip">
+                    <dd>{{ field(class="container--input-padding container--margin-bottom-sm") }}</dd>      
+                    <span class="tooltiptext">{{ field.label }}</span>
+                </div>
+            {% endfor %}
 
             <h3 class="container--margin-bottom-sm">History</h3>
-            <div class="tooltip">
-                {{ render_field(form2.hpi, placeholder="History of Present Illness", class="container--input-padding container--margin-bottom-sm", onkeyup="textAreaAdjust(this)") }}
-                <span class="tooltiptext">History of Present Illness</span>
-            </div>
-            <div class="tooltip">
-                {{ render_field(form2.pmh, placeholder="Past Medical History", class="container--input-padding container--margin-bottom-sm") }}
-                <span class="tooltiptext">Past Medical History</span>
-            </div>
-
-            <div class="tooltip">
-                {{ render_field(form2.fh, placeholder="Family History", class="container--input-padding container--margin-bottom-sm") }}
-                <span class="tooltiptext">Family History</span>
-            </div>
-
-            <div class="tooltip">
-                {{ render_field(form2.psh, placeholder="Personal Social History", class="container--input-padding container--margin-bottom-sm") }}
-                <span class="tooltiptext">Personal Social History</span>
-            </div>
-
-            <!-- Add if statement if M or F to hide or show OB history text area field -->
-            <div class="tooltip">
-                {{ render_field(form2.obh, placeholder="Obstetric History", class="container--input-padding container--margin-bottom-sm") }}
-                <span class="tooltiptext">Obstetric History</span>
-            </div>
-
-            <h3 class="container--margin-bottom-sm">Physical Exam</h3>
-            <div class="tooltip">
-                {{ render_field(form2.pe, placeholder="Physical Examination", class="container--input-padding container--margin-bottom-sm") }}
-                <span class="tooltiptext">Physical Exam</span>
-            </div>
-
-            <hr>
-
-            <div class="tooltip">
-                {{ render_field(form2.final_diagnosis, placeholder="Diagnosis", class="container--input-padding container--margin-bottom-sm") }}
-                <span class="tooltiptext">Diagnosis</span>
-            </div>
-
-            {{ render_field(form.submit, class="container--input-padding") }}
+            <p class="note container--pb-sm">Note: Use spaces for indents. (4 spaces = 1 tab)</p>
+            {% for field2 in form2 %}
+                <div class="tooltip">
+                    <dd>{{ field2(class="container--input-padding container--margin-bottom-sm", onkeyup="textAreaAdjust(this)")}}</dd>
+                    <span class="tooltiptext">{{ field2.label }}</span>
+                </div>
+            {% endfor %}
+            <dd><input class="container--input-padding" type="submit" value="Submit"></dd>
         </form>
-        </div>
-    </div>
-    </div>
-    </div>
-    
-</container>
 
+    </div>
+    </div>
+    </div>
+</container>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/jquery_csrf_and_textareaheight.js') }}"></script>
 
 
 {% endblock %}

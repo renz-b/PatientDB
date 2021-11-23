@@ -3,7 +3,7 @@
 <div>
         <form method="post" id="full_form_submit" class="container--pr container--pl container--pb bg">
 
-            {{ form.hidden_tag() }}
+            {{ form.csrf_token }}
 
 
             <h3 class="container--margin-bottom-sm">History</h3>
@@ -40,14 +40,9 @@
             </div>
 
             <hr>
-
-            <div class="tooltip">
-                {{ render_field(form.final_diagnosis, placeholder="Diagnosis", class="container--input-padding container--margin-bottom-sm") }}
-                <span class="tooltiptext">Diagnosis</span>
-            </div>
+<input id="full_form_submit" class="container--input-padding" type="submit" value="Submit">
 
 
 
-            {{ render_field(form.submit, class="container--input-padding") }}
         </form>
 </div>

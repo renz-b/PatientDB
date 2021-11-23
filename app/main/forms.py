@@ -1,36 +1,36 @@
 from typing import Text
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, TextField, TextAreaField
+from wtforms import StringField, IntegerField, SubmitField, TextAreaField, DateField, SelectField
 
 from wtforms.validators import DataRequired, NumberRange, Email
 
 class GeneralDataForm(FlaskForm):
-    first_name = StringField("First Name", validators=[DataRequired()])
-    last_name = StringField("last_name", validators=[DataRequired()])
-    middle_name = StringField("middle_name", validators=[DataRequired()])
-    name_suffix = StringField("name_suffix", default=None)
-    #add birthday instead of age and compute age whenever rendering from birthday
-    address = StringField("Address", validators=[DataRequired()])
-    email_address = StringField("Email", validators=[Email()]) 
-    phone_number = IntegerField("Contact No.", validators=[DataRequired()])
+    first_name = StringField("First Name", validators=[DataRequired()], render_kw={"placeholder": "First Name"})
+    last_name = StringField("Last Name", validators=[DataRequired()], render_kw={"placeholder": "Last Name"})
+    middle_name = StringField("Middle Name", validators=[DataRequired()], render_kw={"placeholder": "Middle Name"})
+    name_suffix = StringField("Name Suffix", default=None, render_kw={"placeholder": "Name Suffix (eg: Jr., Sr)"})
+    birthday = DateField("Birthday", render_kw={"type": "date"})
+    gender = SelectField("Gender", choices=[("m", "Male"), ("f", "Female")])   
+    email_address = StringField("Email", validators=[Email()], render_kw={"placeholder": "Email"}) 
+    phone_number = IntegerField("Contact No.", validators=[DataRequired()], render_kw={"placeholder": "Contact No."})
+    address = StringField("Address", validators=[DataRequired()], render_kw={"placeholder": "Address"})
+
+
     
-    age = IntegerField("age", validators=[DataRequired(message="Must be a number"), NumberRange(min=0, max=120, message=f"%(min)s - %(max)s")])
-    submit = SubmitField("Submit")
+    #add birthday instead of age and compute age whenever rendering from birthday
+
+
 
 class HistoryForm(FlaskForm):
 
 
-    hpi = TextAreaField("History of Present Illness")
-    pmh = TextAreaField("Past Medical History")
-    fh = TextAreaField("Family History")
-    psh = TextAreaField("Past Medical History")
-    obh = TextAreaField("OB History")
-    pe = TextAreaField("Physical Exam")
+    hpi = TextAreaField("History of Present Illness", render_kw={"placeholder": "History of Present Illness"})
+    pmh = TextAreaField("Past Medical History", render_kw={"placeholder": "Past Medical History"})
+    fh = TextAreaField("Family History", render_kw={"placeholder": "Family History"})
+    psh = TextAreaField("Past Medical History", render_kw={"placeholder": "Past Medical History"})
+    obh = TextAreaField("OB History", render_kw={"placeholder": "OB History"})
+    pe = TextAreaField("Physical Exam", render_kw={"placeholder": "Physical Exam"})
 
-    final_diagnosis = TextField("Diagnosis") # Please use select field and use an __init__ to dynamically produce diagnosis 
-    submit = SubmitField("SubmitForm")
-    #think of a way to dynamically create a list of available diagnosis like what i did in the subjects category for quicktest
-    #and also dynamically commit in same page a diagnosis if not found on list
 
 class FullPatientForm(GeneralDataForm, HistoryForm):
     submit = SubmitField("edit patient")

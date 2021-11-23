@@ -5,9 +5,11 @@ from config import config
 from flask_assets import Environment, Bundle
 from .util.assets import bundles
 from elasticsearch import Elasticsearch
+from flask_wtf.csrf import CSRFProtect
 
 db = SQLAlchemy()
 assets = Environment()
+csrf = CSRFProtect()
 # login_manager = LoginManager()
 # login_manager.login_view =  "auth.login"
 
@@ -19,6 +21,7 @@ def create_app(config_name):
 
     db.init_app(app)
     assets.init_app(app)
+    csrf.init_app(app)
     #login_manager.init_app(app)
 
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \

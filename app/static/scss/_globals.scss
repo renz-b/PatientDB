@@ -13,6 +13,7 @@ body {
     font-family: 'Public Sans', sans-serif;
     font-size: $font-sm;
     line-height: 1.5;
+    color: $verydarkGray;
 
     ::placeholder {
         font-family: 'Public Sans', sans-serif;
@@ -21,9 +22,15 @@ body {
         overflow: hidden;
     }
 }
+
 h1, h2, h3, p {
     margin-top: 0;
     margin-bottom: 0;
+}
+
+ul {
+    font-size: $font-vsm;
+    margin: 0;
 }
 
 a, a:visited, a:hover {
@@ -33,11 +40,13 @@ a, a:visited, a:hover {
 .bg-grey {
     background-image: radial-gradient(circle, $lightGray, $veryLightgray);
 }
+
 // change patientdb card bg to lightgrey
 div.bg-lightgrey {
     background-color: $veryLightgray;
     color: $verydarkGray;
 }
+
 // Spacing
 .container {
     padding-left: 1.5rem;
@@ -58,20 +67,30 @@ div.bg-lightgrey {
     &--pr {
         padding-right: 1.5rem;
     }
+
     &--pl {
         padding-left: 1.5rem;
     }
+
     &--all {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
         padding-top: 1.5rem;
         padding-bottom: 1.5rem;
     }
+
     &--wrapper {
         max-width: 40rem;
         margin-left: auto;
         margin-right: auto;
     }
+
+    &--wrapper-lg {
+        max-width: 60rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     &--margin-bottom-sm {
         margin-bottom: 0.5rem;
     }
@@ -82,6 +101,14 @@ div.bg-lightgrey {
 
     &--margin-left {
         margin-left: 0.75rem;
+    }
+
+    &--margin-left-sm {
+        margin-left: 0.25rem;
+    }
+
+    &--margin-top {
+        margin-top: 1.325rem;
     }
 
     &--input-padding {
@@ -129,6 +156,20 @@ div.bg-lightgrey {
     &-auto-height {
         height: auto;
     }
+    &-flex-grow {
+        flex: 1 0 35%;
+        @include breakpoint-down(small){
+            flex: 1 0 50%;
+        }
+    }
+    &-flex-wrap {
+        flex-wrap: wrap;
+    }
+}
+//flex break
+.break {
+    flex-basis: 100%;
+    height: 0;
 }
 
 // visibility
@@ -155,6 +196,9 @@ div.bg-lightgrey {
 }
 
 dd {
+    @include breakpoint-down(medium){
+        margin-left: 0.1rem;
+    }
     margin-left: 1.25rem;
 }
 
@@ -167,6 +211,9 @@ dd {
 }
 
 .justify {
+    @include breakpoint-down(medium){
+        margin-left: 0;
+    }
     margin-left: 1.875rem;
     text-align: justify;
     text-justify: inter-word;
@@ -175,3 +222,8 @@ dd {
 :focus-visible {
     outline:none;
 }
+
+label {
+    font-size: $font-vsm;
+}
+
