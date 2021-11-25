@@ -91,7 +91,6 @@ $(document).ready(function() {
 
         req.done(function(data) {
             if (data.message) {
-                alert(data.message);
                 window.location.href = data.redirect;
             } else {
                 alert("error in commiting");
