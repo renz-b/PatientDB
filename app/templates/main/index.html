@@ -11,17 +11,14 @@
             <div class="hero__image"></div>
 
             <div class="hero__text container--pb container--wrapper">
-                <p>
+                <p class="container--margin-bottom">
                 PatientDB is a simple web app that stores patient information and able to query the database to display the information.
                 </p>
-                <br>
-                <p class="container--margin-bottom-sm">
-                Features include able to do searches using ID number, name, and diagnosis. On todo list: search using date admitting or discharged.
-                </p>
-                <div class="flex flex-jc-c">
-                <a class="button_links container--input-padding container--margin-right container--margin-left" href="{{ url_for('main.add_patient') }}">Add Patient</a>
-                <a class="button_links container--input-padding container--margin-left" href="{{ url_for('main.all_patients')  }}">View All Patients</a>
-</div>
+                <hr>
+                <div class="flex flex-jc-c container--margin-top">
+                    <a class="button_links container--input-padding container--margin-right container--margin-left" href="{{ url_for('main.add_patient') }}">Add Patient</a>
+                    <a class="button_links container--input-padding container--margin-left" href="{{ url_for('main.all_patients')  }}">View All Patients</a>
+                </div>
             </div>
         </section>
 

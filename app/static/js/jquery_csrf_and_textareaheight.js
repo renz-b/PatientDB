@@ -11,7 +11,6 @@ function textAreaAdjust(element) {
     element.style.height = (10+element.scrollHeight)+"px";
 };
 
-
 // CSRF validation
 var csrf_token = "{{ csrf_token() }}";
 

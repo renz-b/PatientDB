@@ -11,7 +11,9 @@
         <section class="container--pt container--pr container--pl">
             <h2 class="text-align-center">{{ general_data_values[0] }} {{ general_data_values[1] }}<br>{{ general_data_values[2] }} y.o., {{ general_data_values[3] }}</h2>
             <h3 class="inline-block container--pb-sm">General Data</h3>  
-              
+            <a href="{{ url_for('main.delete_patient', id=patient.id) }}" class="inline-block inline-block-float-right container--margin-left">
+                <input type="button" class="container--input-padding delete-patient" value="Delete">
+            </a>              
             <a href="{{ url_for('main.patient_update', id=patient.id) }}" class="inline-block inline-block-float-right container--margin-left">
                 <input type="button" class="container--input-padding" value="Edit Patient">
             </a>            
@@ -19,6 +21,7 @@
             <a href="{{ url_for('main.all_patients', page=session['prev_page']) }}" class="inline-block inline-block-float-right">
                 <input type="button" class="container--input-padding" value="Back">
             </a>
+
             {% for k, v in general_data_keys|zip(general_data_values) %}
                 <dd> <b>{{ k }}: </b>{{ v }}</dd>
             {% endfor %}

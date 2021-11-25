@@ -1,19 +1,20 @@
 $(document).ready(function() {
     var csrf_token = $("input[name='csrf_token']").val()
+    
     $("#general_data_form").on('submit', function(e) {
-
         let first_name = $("#first_name").val();
         let last_name = $("#last_name").val();
         let middle_name = $("#middle_name").val();
         let name_suffix = $("#name_suffix").val();
         let gender = $("#gender").val();
-        let birthday = $("#birthday").val();
+        let address = $("#address").val();
 
         req = $.ajax({
             url : "/similar_patient",
             type : "POST",
             data : { first_name : first_name, last_name : last_name, middle_name : middle_name, 
-                name_suffix : name_suffix, gender : gender, birthday : birthday, csrf_token : csrf_token }
+                name_suffix : name_suffix, gender : gender, address : address, csrf_token : csrf_token,
+                query : "true" }
         });
         
         req.done(function(data) {
@@ -34,6 +35,28 @@ $(document).ready(function() {
             }
         });
         e.preventDefault();
+    });
+
+    $(document).on("click", "#back-button", function() {
+        $("#table_similar_patients").slideUp('slow');
+    });
+
+    $(document).on("click", "#continue-button", function() {
+        req = $.ajax({
+            url : "/similar_patient",
+            type : "POST",
+            data : { query : "false", csrf_token : csrf_token }
+        })     
+        req.done(function(data) {
+            $("#messages_from_ajax").slideUp('slow', function() {
+                $("#messages_from_ajax").html(data.message);
+                    }).slideDown(400);
+            $("#general_data_submit").animate({opacity: 0}, 400);
+            $("#table_similar_patients").slideUp('slow', function() {
+                $("#table_similar_patients").html(data.html);
+                    }).slideDown(400);            
+        })
+
     });
 
     $(document).on('submit', '#full_form_submit', function(e) {

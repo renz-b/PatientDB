@@ -95,6 +95,10 @@ div.bg-lightgrey {
         margin-bottom: 0.5rem;
     }
 
+    &--margin-bottom {
+        margin-bottom: 1.5rem;
+    }
+
     &--margin-right {
         margin-right: 0.75rem;
     }
@@ -191,8 +195,8 @@ div.bg-lightgrey {
     width: 18vh;
 }
 
-.text-align-center {
-    text-align: center;
+:focus-visible {
+    outline:none;
 }
 
 dd {
@@ -210,6 +214,13 @@ dd {
     }
 }
 
+// text formatting
+.text-align-center {
+    text-align: center;
+}
+
+
+
 .justify {
     @include breakpoint-down(medium){
         margin-left: 0;
@@ -219,11 +230,19 @@ dd {
     text-justify: inter-word;
 }
 
-:focus-visible {
-    outline:none;
-}
-
 label {
     font-size: $font-vsm;
 }
 
+p.note {
+    font-style: italic;
+    
+    &--float-r {
+        float: right;
+        color: $brightPurple;
+    }
+}
+
+p.history {
+    white-space: pre-wrap;
+}

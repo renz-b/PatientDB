@@ -1,5 +1,8 @@
 .tooltip {
     position: relative;
+    &--message {
+        position: static;
+    }
 }
 
 .tooltip .tooltiptext {
@@ -26,6 +29,15 @@
     opacity: 0;
     transition: 400ms ease-in-out;
 
+    &--message {
+        opacity: 1;
+        top: 40%;
+        left: 38%;
+        right: 0;
+        width: 20rem;
+        z-index: 2;
+
+    }
     &--help {
         left: 52.5%;
         top: -43px;
@@ -56,35 +68,4 @@ form.diagnosis_datalist {
     margin-right: 0.3125rem;
 }
 
-input[type=button].update-diagnosis-list {
-        color: $darkGray;
-        background: none;
-        font-size: $font-vsm;
-        border: 1px solid $darkGray;
-        border-radius: 2px;
-        box-shadow: none;
-        transition: 300ms ease-in-out;
 
-        &:hover {
-            color: #fff;
-            background-color: $darkGray;
-        }
-}
-
-input[type=button].update-diagnosis-patient {
-    background-color: $verydarkGray;
-}
-
-
-p.note {
-    font-style: italic;
-    
-    &--float-r {
-        float: right;
-        color: $brightPurple;
-    }
-}
-
-p.history {
-    white-space: pre-wrap;
-}

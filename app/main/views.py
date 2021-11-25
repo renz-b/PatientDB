@@ -1,7 +1,9 @@
 from math import ceil
 from flask import render_template, url_for, request, current_app, jsonify, redirect, session
 from datetime import date, datetime, time
+from flask.helpers import flash
 from werkzeug.urls import url_parse
+from sqlalchemy.exc import IntegrityError
 from . import main
 from .forms import GeneralDataForm, HistoryForm, FullPatientForm
 from ..models import Patient, History, Diagnosis
@@ -44,31 +46,31 @@ def all_patients():
     total_pages = ceil(total/current_app.config["POSTS_PER_PAGE"])
     return render_template("main/tables.html", patients=patients, total=total, total_pages=total_pages, next_url = pagination, prev_url = pagination, page=page)
 
-
 @main.route("/similar_patient", methods=["POST"])
 def similar_patient():
-    try:
-        q = f"{request.form['first_name']} {request.form['last_name']} {request.form['middle_name']} {request.form['birthday']}"
-        page = request.args.get("page", 1, type=int)
-        patients, total, score = Patient.search(
-        q, page, current_app.config["POSTS_PER_PAGE"], min_score=0.8)
-        total_pages = int(total/current_app.config["POSTS_PER_PAGE"])
-        
-        if total == 0:
-    
-            form = HistoryForm()
-            #diagnosis = Diagnosis.query.all() add back to return testing diagnosis in patient_details.html
-            return jsonify({ "html" : render_template("main/section_second_form.html", form=form), 'message' : "No patient found with same name. Please complete form." }) #change this after making html form for diagnosis and history
-        else:
-            return render_template("main/section_table.html", patients=patients, total=total, 
-                query=q, page=page, total_pages=total_pages, score=score)        
-    except:
-        elastic_check_for_emptydb = Patient.query.all()
+    if request.form["query"] == "true":
+        try:
+            q = f"{request.form['first_name']} {request.form['last_name']} {request.form['middle_name']} {request.form['address']} {request.form['gender']}"
+            page = request.args.get("page", 1, type=int)
+            patients, total, score = Patient.search(
+            q, page, current_app.config["POSTS_PER_PAGE"], min_score=0.8, fields=["first_name", "last_name", "middle_name", "gender", "address"])
+            total_pages = int(total/current_app.config["POSTS_PER_PAGE"])
+            
+            if total == 0:
+                form = HistoryForm()
+                return jsonify({ "html" : render_template("main/section_second_form.html", form=form), 'message' : "No patient found with same name. Please complete form." }) 
+            else:
+                return render_template("main/section_table.html", patients=patients, total=total, 
+                    query=q, page=page, total_pages=total_pages, score=score)        
+        except:
+            elastic_check_for_emptydb = Patient.query.all()
 
-        if elastic_check_for_emptydb == []:
-            form = HistoryForm()
-            return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "Database empty." }) #change this after making html form for diagnosis and history
-
+            if elastic_check_for_emptydb == []:
+                form = HistoryForm()
+                return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "Database empty." }) #change this after making html form for diagnosis and history
+    else:
+        form = HistoryForm()
+        return jsonify({ "html" : render_template("main/section_second_form.html", form=form), 'message' : "&#10071; Please make sure patient is not duplicate. Complete form below." })
 
 @main.route("/commit_patient", methods=["POST"])
 def commit_patient():
@@ -96,7 +98,7 @@ def commit_patient():
         db.session.add(patient)
         db.session.add(history)
         db.session.commit()
-        return jsonify({ 'message': "success! Committed!", "redirect" : url_for('main.index') })
+        return jsonify({ 'message': "success! Committed!", "redirect" : url_for("main.patient", id=patient.id) })
 
 @main.route("/patient/<id>")
 def patient(id):
@@ -119,7 +121,7 @@ def patient(id):
         "Phone Number" : patient.phone_number,
         "Date Added" : f"{date_added} - {time_added}",
     }
-    print(general_data["Date Added"])
+  
     history = {
         "History of Present Illness" : patient.history.hpi,
         "Past Medical History" : patient.history.pmh,
@@ -162,17 +164,24 @@ def diagnosis_list_update():
 
         if diagnosis == '':
             return jsonify({ 'message' : 'no input'})
-        else:    
-            if action == "add":
-                diagnosis_model = Diagnosis(disease=diagnosis)
-                db.session.add(diagnosis_model)
-            else:
-                diagnosis_model = Diagnosis.query.filter_by(disease=diagnosis).first()
-                db.session.delete(diagnosis_model)
-            
-            db.session.commit()
-            diagnosis_query = Diagnosis.query.all()
-            return jsonify({ "html" : render_template("main/section_diagnosis.html", diagnosis_select = diagnosis_query),
+        else: 
+            try:
+                if action == "add":
+                    diagnosis_model = Diagnosis(disease=diagnosis)
+                    
+                    db.session.add(diagnosis_model)
+                else:
+                    diagnosis_model = Diagnosis.query.filter_by(disease=diagnosis).first()
+                    db.session.delete(diagnosis_model)
+                
+                db.session.commit()
+                diagnosis_query = Diagnosis.query.all()
+            except:
+                if action == "add":
+                    return jsonify({ 'message' : '&#10004;&#65039; Diagnosis already in database!<br>Can not delete if it does not exist.'})
+                else:
+                    return jsonify({ 'message' : '&#10060; Diagnosis not in database!'})
+            return jsonify({ "html" : render_template("main/section_diagnosis.html", diagnosis_select = diagnosis_query, diagnosis = diagnosis),
                 "message" : f"&#128203; {message}: {diagnosis}." })
 
 @main.route("/update_patient_diagnosis", methods=["POST"])
@@ -180,7 +189,6 @@ def update_patient_diagnosis():
     patient_id = request.form["patient_id"]
     diagnosis = request.form["diagnosis"]
     action = request.form["action"]
-    print(diagnosis)
 
     if diagnosis == '':
         return jsonify({ 'message' : 'no input'})
@@ -189,17 +197,33 @@ def update_patient_diagnosis():
         diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first()
         try:
             if action == 'add':
-                patient = patient_query.final_diagnosis.append(diagnosis_query)
+                    patient = patient_query.final_diagnosis.append(diagnosis_query)
             else:
                 patient = patient_query.final_diagnosis.remove(diagnosis_query)
-            
             db.session.add(patient_query)
             db.session.commit()
-        except:
-            return jsonify({ 'message' : '&#128680; Diagnosis not in database.'})
-
+        except IntegrityError:
+            return jsonify({ 'message' : '&#10004;&#65039; Duplicate: Diagnosis already present in patient!'})
+        except AttributeError:
+            return jsonify({ 'message' : '&#128680; Diagnosis not in database.<br>Please "Add" Diagnosis on the right &#128073;'})
         return jsonify({ 'html' : render_template("main/section_final_diagnosis.html", 
-            final_diagnosis = patient_query.final_diagnosis.all()), 'message' : 'Diagnosis Updated'})
+            final_diagnosis = patient_query.final_diagnosis.all()), 'message' : '&#10004;&#65039; Diagnosis Updated'})
 
+@main.route("/patient/<id>/delete_patient")
+def delete_patient(id):
+    patient = Patient.query.filter_by(id=id).first()
+    message = f"Deleted: {patient.last_name}, {patient.first_name}: {patient.age()} y.o., {patient.gender.upper()}"
+    session["message"] = message
+    db.session.delete(patient)
+    db.session.commit()
+    return redirect(url_for("main.search_page"))
 
-
+@main.route("/search_page")
+def search_page():
+    try:
+        message = session["message"] 
+        session.pop("message", None)
+        flash(message)
+        return render_template("main/search_page.html")
+    except:
+        return render_template("main/search_page.html")

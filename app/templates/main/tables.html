@@ -53,6 +53,7 @@
                   <th scope="col">ID</th>
                   <th scope="col">Name</th>
                   <th scope="col">Age</th>
+                  <th scope="col">Gender</th>
                   <th scope="col">Address</th>
                   <th scope="col">Date Added</th>
                 </tr>
@@ -61,8 +62,11 @@
                 {% for patient in patients %}
                 <tr>
                   <td data-label="ID">{{ patient.id }}</td>
-                  <td data-label="Name"><a href="{{ url_for('main.patient', id=patient.id) }}" class="patient_link">{{ patient.last_name }}, {{ patient.first_name }}</a></td>
+                  <td data-label="Name"><a href="{{ url_for('main.patient', id=patient.id) }}" class="patient_link">{{ patient.last_name }}, {{ patient.first_name }}
+                    {% if patient.name_suffix %}, {{ patient.name_suffix }}{% endif %}
+                  </a></td>
                   <td data-label="Age">{{ patient.age() }}</td>
+                  <td data-label="Gender">{{ patient.gender.upper() }}</td>
                   <td data-label="Address">{{ patient.address }}</td>
                   <td data-label="Email">{{ patient.date_added.strftime("%Y-%m-%d") }}</td>
                 </tr>

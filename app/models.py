@@ -4,14 +4,15 @@ import datetime
 from datetime import date
 from os import remove
 
+
 from . import db
 from app.search import add_to_index, remove_from_index, query_index
 
 class SearchableMixin(object):
     @classmethod
-    def search(cls, expression, page, per_page, min_score=0.1):
+    def search(cls, expression, page, per_page, min_score=0.1, fields=["first_name", "last_name", "middle_name"]):
         ids, total, score = query_index(cls.__tablename__, expression, page, per_page, 
-            min_score)
+            min_score, fields)
         if total == 0:
             return cls.query.filter_by(id=0), 0, 0 #last zero is a score of 0 if results return none
         when = []
@@ -26,8 +27,10 @@ class SearchableMixin(object):
             'add': list(session.new),
             'update': list(session.dirty),
             'delete': list(session.deleted)
+            
         }
-    
+        print(session._changes["delete"])
+
     @classmethod
     def after_commit(cls, session):
         for obj in session._changes['add']:
@@ -37,7 +40,7 @@ class SearchableMixin(object):
             if isinstance(obj, SearchableMixin):
                 add_to_index(obj.__tablename__, obj)
         for obj in session._changes['delete']:
-            if isinstance(obj.__tablename__, type(obj)):
+            if isinstance(obj, SearchableMixin):
                 remove_from_index(obj.__tablename__, obj)
         session._changes = None
 
@@ -48,13 +51,14 @@ class SearchableMixin(object):
 
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+
 diagnosisTable = db.Table("diagnosis_patient",
     db.Column('diagnosis_id', db.Integer, db.ForeignKey('diagnosis.id'), primary_key=True),
     db.Column('patient_id', db.Integer, db.ForeignKey('patient.id'), primary_key=True))
 
 class Patient(SearchableMixin, db.Model):
     __tablename__ = "patient"
-    __searchable__=["first_name", "last_name", "middle_name", "birthday"]
+    __searchable__=["first_name", "last_name", "middle_name", "gender", "address"]
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(64), nullable=False)
     last_name = db.Column(db.String(64), nullable=False)
@@ -72,7 +76,8 @@ class Patient(SearchableMixin, db.Model):
         "History",
         backref="patient",
         lazy=True,
-        uselist=False
+        uselist=False,
+        cascade="all,delete"
     )
    
     final_diagnosis = db.relationship(

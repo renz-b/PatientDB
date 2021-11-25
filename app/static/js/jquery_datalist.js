@@ -14,6 +14,8 @@ $(document).ready(function() {
             if (data.html) {
                 $("#diagnosis_datalist").html(data.html);
                 $("#messages").html(data.message);
+            } else {
+                $("#messages").html(data.message);
             }
         });
         e.preventDefault();
@@ -32,7 +34,9 @@ $(document).ready(function() {
             if (data.html) {
                 $("#diagnosis_datalist").html(data.html);
                 $("#messages").html(data.message);
- 
+                $("#diagnosisInputValue").val('');
+            } else {
+                $("#messages").html(data.message);
             }
         });
         e.preventDefault();
@@ -50,10 +54,12 @@ $(document).ready(function() {
                 csrf_token : csrf_token }
         });
         req.done(function(data){
-            if (data) {
+            if (data.message == "&#10004;&#65039; Diagnosis Updated") {
                 $("#final_diagnosis").html(data.html);
                 $("#messages").html(data.message);
                 $("#diagnosisInputValue").val('');
+            } else {
+                $("#messages").html(data.message);
             }
         });
         e.preventDefault();
@@ -71,10 +77,12 @@ $(document).ready(function() {
                 csrf_token : csrf_token }
         });
         req.done(function(data){
-            if (data) {
+            if (data.html) {
                 $("#final_diagnosis").html(data.html);
                 $("#messages").html(data.message);
                 $("#diagnosisInputValue").val('');
+            } else {
+               $("#messages").html(data.message); 
             }
         });
         e.preventDefault();

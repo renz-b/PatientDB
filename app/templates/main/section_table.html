@@ -34,6 +34,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Age</th>
+                <th scope="col">Gender</th>
                 <th scope="col">Address</th>
                 <th scope="col">Date Added</th>
               </tr>
@@ -43,14 +44,16 @@
               <tr>
                 <td data-label="ID">{{ patient.id }}</td>
                 <td data-label="Name"><a href="{{ url_for('main.patient', id=patient.id) }}" class="patient_link" target="_blank">{{ patient.last_name }}, {{ patient.first_name }}</a></td>
-                <td data-label="Age">{{ patient.age }}</td>
+                <td data-label="Age">{{ patient.age() }}</td>
+                <td data-label="Gender">{{ patient.gender }}</td>
                 <td data-label="Address">{{ patient.address }}</td>
                 <td data-label="Email">{{ patient.date_added }}</td>
               </tr>
               {% endfor %}
             </tbody>
         </table>
-
+        <input id="continue-button" class="container--input-padding" type="button" value="Continue">
+        <input id="back-button" class="container--input-padding" type="button" value="Back">
         <div class="pagination text-align-center">
           <a class="container--margin-right 
           {% if not prev_url %} pagination__disabled {% endif %}" 
@@ -61,6 +64,8 @@
           {% if not next_url %} pagination__disabled {% endif %}" 
           href="{{ next_url or '#' }}">
             ❯
+
+
           </a>
         </div>
       </div>

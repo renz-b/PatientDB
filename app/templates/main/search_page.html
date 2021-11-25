@@ -1,0 +1,33 @@
+{% extends "base.html" %} 
+
+{% block content %}
+    <div class="flex flex-ai-c flex-fill-height bg-grey">
+
+
+
+
+        <section class="patientdb">
+            
+            <div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="tooltip tooltip--message text-align-center">
+                        {% for message in messages %}
+                        <span class="tooltiptext tooltiptext--message">{{ message }}</span>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+        
+            <div class="patientdb__card container--all container--wrapper">
+                <div class="patientdb__image"></div>
+                <h1 class="container--margin-bottom-sm">PatientDB</h1>
+                <form action="{{ url_for('main.search') }}" method="get">
+                    <input class="container--margin-bottom-sm container--input-padding" 
+                        type="text" name="query" id="" placeholder="Search..." autocomplete="off">
+                    <input class="container--input-padding" type="submit" value="Submit">
+                </form>
+            </div>
+        </section>    </div>
+    </div>
+{% endblock %}
