@@ -18,9 +18,14 @@
 
 ***Querying Patient, Adding and Deleting Diagnosis***
 ![Demo2 GIF](https://github.com/renz-b/PatientDB/blob/master/.github/readme/Animation2.gif)
-- Diagnosis and Patient are in a Many to Many relationship
-- 
-Responsive and made with SASS
+
+## Database Model
+- Diagnosis and Patient have a Many to Many relationship
+![DB Diagram](https://github.com/renz-b/PatientDB/blob/master/.github/readme/db_diagram.drawio.svg)
+
+
+## Technologies Used:
+- SASS
 
 
 
