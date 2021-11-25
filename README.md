@@ -13,7 +13,6 @@
 </p>
 
 ## :zap: Demo
-[Back to top](#table-of-contents)
 ***Adding a Patient***
 ![Demo GIF](https://github.com/renz-b/PatientDB/blob/master/.github/readme/Animation.gif)
 
