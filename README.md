@@ -13,7 +13,13 @@
 </p>
 
 ## Demo
+***Adding a Patient***
 ![Demo GIF](https://github.com/renz-b/PatientDB/blob/master/.github/readme/Animation.gif)
+
+***Querying Patient, Adding and Deleting Diagnosis***
+![Demo2 GIF](https://github.com/renz-b/PatientDB/blob/master/.github/readme/Animation2.gif)
+- Diagnosis and Patient are in a Many to Many relationship
+- 
 Responsive and made with SASS
 
 
