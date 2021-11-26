@@ -11,7 +11,7 @@ input[type=text], input[type=date], select {
     }
 }
 
-input[type=submit], input[type=button] {
+input[type=submit], input[type=button], button[name=delete] {
     opacity: 1;
     border: 0;
     font-size: $font-vsm;
@@ -61,6 +61,8 @@ input[type=button].update-diagnosis-patient {
     background-color: $verydarkGray;
 }
 
-input[type=button].delete-patient {
+button[name=delete].delete-patient {
     background-color: maroon;
+    padding-top: 3.2px;
+    padding-bottom: 2.5px;
 }

@@ -5,10 +5,15 @@
 {% endblock %}
 
 {% block content %}
-<container class="flex flex-fd-col flex-jc-c flex-ai-c flex-fill-height bg-grey">
-    <h1>404 - Not Found!</h1>
-    <a href="{{ back_link }}" class="inline-block inline-block-float-right">
-                <input type="button" class="container--input-padding" value="Back">
-            </a>
+<container class="flex flex-ai-c flex-fill-height bg-grey">
+<div class="patientdb flex flex-jc-c container--wrapper">
+        <div class="patientdb__card text-align-center container--all">
+        <h1>404 - Not Found!</h1>
+        <hr>
+        <p class="container--pb-sm">{{ e }}</p>
+        <a href="{{ back_link }}" class="">
+                    <input type="button" class="container--input-padding" value="Back"></a>
+        </div>
+    </div>
 </container>
 {% endblock %}

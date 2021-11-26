@@ -165,6 +165,11 @@ class Diagnosis(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     disease = db.Column(db.String(256), unique=True, nullable=False)
 
+    @staticmethod
+    def all_diagnosis():
+        diagnoses = Diagnosis.query.all()
+        return diagnoses
+
     def __repr__(self):
         return "<Disease: {}>".format(self.disease)
 

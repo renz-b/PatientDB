@@ -107,9 +107,12 @@ def commit_patient():
 def patient(id):
     patient = Patient.query.filter_by(id=id).first_or_404()
     patient_id = patient.id
-    referrer = url_parse(request.referrer)
-    if referrer.path == url_for('main.all_patients'):
-        session["prev_page"] = referrer.query[5:6]
+    try:
+        referrer = url_parse(request.referrer)
+        if referrer.path == url_for('main.all_patients'):
+            session["prev_page"] = referrer.query[5:6]
+    except:
+        referrer = url_for('main.index')
     date_added = patient.date_added.date().strftime("%Y/%b/%d")
     time_added = patient.date_added.time().strftime("%I:%M %p")
 
@@ -200,7 +203,7 @@ def update_patient_diagnosis():
         diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first_or_404()
         try:
             if action == 'add':
-                    patient = patient_query.final_diagnosis.append(diagnosis_query)
+                patient = patient_query.final_diagnosis.append(diagnosis_query)
             else:
                 patient = patient_query.final_diagnosis.remove(diagnosis_query)
             db.session.add(patient_query)
@@ -212,8 +215,9 @@ def update_patient_diagnosis():
         return jsonify({ 'html' : render_template("main/section_final_diagnosis.html", 
             final_diagnosis = patient_query.final_diagnosis.all()), 'message' : '&#10004;&#65039; Diagnosis Updated'})
 
-@main.route("/patient/<id>/delete_patient")
-def delete_patient(id):
+@main.route("/patient/delete_patient")
+def delete_patient():
+    id = request.args.get("delete")
     patient = Patient.query.filter_by(id=id).first_or_404()
     message = f"Deleted: {patient.last_name}, {patient.first_name}: {patient.age()} y.o., {patient.gender.upper()}"
     session["message"] = message
