@@ -1,23 +1,17 @@
-PatientDB is a simple web app that stores patient information, able to edit the information, and able to query the database to display the patient details.
+{% extends "base.html" %}
 
-PatientDB is built using Python with the Flask framework with a PostgreSQL database. The search feature uses Elasticsearch engine which indexes patient details.
+{% block head %}
+<title>About</title>
+{% endblock %}
 
-Database Models:
-insert picture of database models here and explain why is this the case
+{% block content %}
+<container class="flex flex-fd-col bg-grey about">
+    <div class="patientdb container--all container--wrapper-lg">
+        <div class="patientdb__card patientdb__card--about container--all">
+            {{ mkd_text|markdown}}
+            </div>
+    </div>
 
--highlight diagnosis functionality
+</container>
 
-Inserting Data:
-Before inserting data PatientDB checks if there are similar patients already in the database and returns similar results which then offers a set of choices to continue or not.
-At first the diagnosis table is empty and users are able to add their own diagnosis.
-
-Textarea field:
-DEMO:
-Gif
-
-Technoligies Used:
-Flask
-Jquery
-SASS
-Elasticsearch
-
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>500 - Internal Server Error</title>
+{% endblock %}
+
+{% block content %}
+<container class="flex flex-fd-col flex-jc-c flex-ai-c flex-fill-height bg-grey">
+    <h1>500 - Internal Server Error</h1>
+        <a href="{{ back_link }}" class="inline-block inline-block-float-right">
+                <input type="button" class="container--input-padding" value="Back">
+            </a>
+</container>
+{% endblock %}

@@ -29,7 +29,6 @@ class SearchableMixin(object):
             'delete': list(session.deleted)
             
         }
-        print(session._changes["delete"])
 
     @classmethod
     def after_commit(cls, session):

@@ -30,7 +30,10 @@ def search():
 
 @main.route("/about", methods=["GET"])
 def about():
-    return "hello"
+    mkd_text = open("ABOUT.md", "r")
+    import os
+    gif_link = f"{os.getcwd()}\\.github\\readme"
+    return render_template('main/about.html', mkd_text=mkd_text.read(), gif_link=gif_link)
 
 @main.route("/add_patient", methods=["GET", "POST"])
 def add_patient():
@@ -140,7 +143,7 @@ def patient(id):
 
 @main.route("/patient/<id>/edit", methods=["POST", "GET"])
 def patient_update(id):
-    patient = Patient.query.filter_by(id=id).first()
+    patient = Patient.query.filter_by(id=id).first_or_404()
     history = patient.history
     referrer = request.referrer
 
@@ -193,8 +196,8 @@ def update_patient_diagnosis():
     if diagnosis == '':
         return jsonify({ 'message' : 'no input'})
     else:
-        patient_query = Patient.query.filter_by(id=patient_id).first()
-        diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first()
+        patient_query = Patient.query.filter_by(id=patient_id).first_or_404()
+        diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first_or_404()
         try:
             if action == 'add':
                     patient = patient_query.final_diagnosis.append(diagnosis_query)
@@ -211,7 +214,7 @@ def update_patient_diagnosis():
 
 @main.route("/patient/<id>/delete_patient")
 def delete_patient(id):
-    patient = Patient.query.filter_by(id=id).first()
+    patient = Patient.query.filter_by(id=id).first_or_404()
     message = f"Deleted: {patient.last_name}, {patient.first_name}: {patient.age()} y.o., {patient.gender.upper()}"
     session["message"] = message
     db.session.delete(patient)

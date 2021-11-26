@@ -154,6 +154,9 @@ div.bg-lightgrey {
     &-fd-row {
         flex-direction: row;
     }
+    &-fd-col {
+        flex-direction: column;
+    }
     &-fill-height {
         height: calc(100vh - 50px);
     }
@@ -246,3 +249,4 @@ p.note {
 p.history {
     white-space: pre-wrap;
 }
+

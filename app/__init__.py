@@ -6,10 +6,12 @@ from flask_assets import Environment, Bundle
 from .util.assets import bundles
 from elasticsearch import Elasticsearch
 from flask_wtf.csrf import CSRFProtect
+from flaskext.markdown import Markdown
 
 db = SQLAlchemy()
 assets = Environment()
 csrf = CSRFProtect()
+
 # login_manager = LoginManager()
 # login_manager.login_view =  "auth.login"
 
@@ -22,6 +24,7 @@ def create_app(config_name):
     db.init_app(app)
     assets.init_app(app)
     csrf.init_app(app)
+    Markdown(app)
     #login_manager.init_app(app)
 
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \

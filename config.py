@@ -10,7 +10,7 @@ class Config:
     ES_MIN_SCORE = 0.1 #CHANGE IN MODELS.PY this is not global
     #not global hardcoded into search.py query function min_score default value
     #when setting a variable using current_app.config throws a working outside context error
-    POSTS_PER_PAGE = 5
+    POSTS_PER_PAGE = 10
 
     @staticmethod
     def init_app(app):
@@ -22,7 +22,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get("ADD URI LATER")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_POSTGRES")
 
 
 class ProductionConfig(Config):
