@@ -38,7 +38,7 @@
 </div>
 
 ## Coverage
-<table class="index" data-sortable="">
+<table class="index" data-sortable="" style="font-size:10px;">
         <thead>
             <tr class="tablehead" title="Click to sort">
                 <th class="name left" aria-sort="none" data-shortcut="n">Module</th>
@@ -52,7 +52,7 @@
         </thead>
         <tbody>
             <tr class="file">
-                <td class="name left"><a href="d_5f5a17c013354698___init___py.html">app\__init__.py</a></td>
+                <td class="name left">app\__init__.py</td>
                 <td>28</td>
                 <td>14</td>
                 <td>0</td>
@@ -61,7 +61,7 @@
                 <td class="right" data-ratio="15 30">50%</td>
             </tr>
             <tr class="file">
-                <td class="name left"><a href="d_5f5a17c013354698_fake_py.html">app\fake.py</a></td>
+                <td class="name left">app\fake.py</td>
                 <td>18</td>
                 <td>2</td>
                 <td>0</td>
@@ -70,7 +70,7 @@
                 <td class="right" data-ratio="18 20">90%</td>
             </tr>
             <tr class="file">
-                <td class="name left"><a href="d_ffc6e1978ca246d0___init___py.html">app\main\__init__.py</a></td>
+                <td class="name left">app\main\__init__.py</td>
                 <td>3</td>
                 <td>0</td>
                 <td>0</td>
@@ -79,7 +79,7 @@
                 <td class="right" data-ratio="3 3">100%</td>
             </tr>
             <tr class="file">
-                <td class="name left"><a href="d_ffc6e1978ca246d0_errors_py.html">app\main\errors.py</a></td>
+                <td class="name left">app\main\errors.py</td>
                 <td>11</td>
                 <td>2</td>
                 <td>0</td>
@@ -88,7 +88,7 @@
                 <td class="right" data-ratio="9 11">82%</td>
             </tr>
             <tr class="file">
-                <td class="name left"><a href="d_ffc6e1978ca246d0_forms_py.html">app\main\forms.py</a></td>
+                <td class="name left">app\main\forms.py</td>
                 <td>23</td>
                 <td>0</td>
                 <td>0</td>
@@ -97,7 +97,7 @@
                 <td class="right" data-ratio="23 23">100%</td>
             </tr>
             <tr class="file">
-                <td class="name left"><a href="d_ffc6e1978ca246d0_views_py.html">app\main\views.py</a></td>
+                <td class="name left">app\main\views.py</td>
                 <td>182</td>
                 <td>13</td>
                 <td>0</td>
@@ -106,7 +106,7 @@
                 <td class="right" data-ratio="190 214">89%</td>
             </tr>
             <tr class="file">
-                <td class="name left"><a href="d_5f5a17c013354698_models_py.html">app\models.py</a></td>
+                <td class="name left">app\models.py</td>
                 <td>92</td>
                 <td>72</td>
                 <td>0</td>
@@ -115,7 +115,7 @@
                 <td class="right" data-ratio="34 112">30%</td>
             </tr>
             <tr class="file">
-                <td class="name left"><a href="d_5f5a17c013354698_search_py.html">app\search.py</a></td>
+                <td class="name left">app\search.py</td>
                 <td>18</td>
                 <td>12</td>
                 <td>0</td>
@@ -124,7 +124,7 @@
                 <td class="right" data-ratio="9 28">32%</td>
             </tr>
         </tbody>
-        <tfoot>
+        <tfoot  style="font-weight:bold; color:darkblue;">
             <tr class="total">
                 <td class="name left">Total</td>
                 <td>375</td>
