@@ -16,7 +16,7 @@ def remove_from_index(index, model):
 
 def query_index(index, search, page, per_page, min_score, fields):
     if not current_app.elasticsearch:
-        return [], 0
+        return [], 0, 0
     search = current_app.elasticsearch.search(
         index=index,
         body={'query': {'combined_fields': {'query': search, 'fields': fields, "operator": "and"}}, #make this into a variable
