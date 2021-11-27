@@ -12,30 +12,30 @@
                 <span class="tooltiptext">History of Present Illness</span>
             </div>
             <div class="tooltip">
-                {{ render_field(form.pmh, placeholder="Past Medical History", class="container--input-padding container--margin-bottom-sm") }}
+                {{ render_field(form.pmh, placeholder="Past Medical History", class="container--input-padding container--margin-bottom-sm", onkeyup="textAreaAdjust(this)") }}
                 <span class="tooltiptext">Past Medical History</span>
             </div>
 
             <div class="tooltip">
-                {{ render_field(form.fh, placeholder="Family History", class="container--input-padding container--margin-bottom-sm") }}
+                {{ render_field(form.fh, placeholder="Family History", class="container--input-padding container--margin-bottom-sm", onkeyup="textAreaAdjust(this)") }}
                 <span class="tooltiptext">Family History</span>
             </div>
 
             <div class="tooltip">
-                {{ render_field(form.psh, placeholder="Personal Social History", class="container--input-padding container--margin-bottom-sm") }}
+                {{ render_field(form.psh, placeholder="Personal Social History", class="container--input-padding container--margin-bottom-sm", onkeyup="textAreaAdjust(this)") }}
                 <span class="tooltiptext">Personal Social History</span>
             </div>
 
             <!-- Add if statement if M or F to hide or show OB history text area field -->
             <div class="tooltip">
-                {{ render_field(form.obh, placeholder="Obstetric History", class="container--input-padding container--margin-bottom-sm") }}
+                {{ render_field(form.obh, placeholder="Obstetric History", class="container--input-padding container--margin-bottom-sm", onkeyup="textAreaAdjust(this)") }}
                 <span class="tooltiptext">Obstetric History</span>
             </div>
 
             <h3 class="container--margin-bottom-sm">Physical Exam</h3>
 
             <div class="tooltip">
-                {{ render_field(form.pe, placeholder="Physical Examination", class="container--input-padding container--margin-bottom-sm") }}
+                {{ render_field(form.pe, placeholder="Physical Examination", class="container--input-padding container--margin-bottom-sm", onkeyup="textAreaAdjust(this)") }}
                 <span class="tooltiptext">Physical Exam</span>
             </div>
 
