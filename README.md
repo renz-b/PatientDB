@@ -1,6 +1,9 @@
 ![logo](https://github.com/renz-b/PatientDB/blob/master/app/static/svg/icon.svg)**&nbsp;PatientDB**
 ---
 <p align="center">
+ <a href="https://patientdb-heroku.herokuapp.com"><i>PatientDB on Heroku</i></a>
+</p>
+<p align="center">
 <img src="https://img.shields.io/github/pipenv/locked/python-version/renz-b/PatientDB">
 <img src="https://img.shields.io/github/pipenv/locked/dependency-version/renz-b/PatientDB/flask">
 <img src="https://img.shields.io/github/pipenv/locked/dependency-version/renz-b/PatientDB/flask-sqlalchemy">
