@@ -32,9 +32,9 @@ flask-migrate = "*"
 flask-markdown = "*"
 flask-sslify = "*"
 gunicorn = "*"
+faker = "*"
 
 [dev-packages]
-faker = "*"
 
 [requires]
 python_version = "3.9"
