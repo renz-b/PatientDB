@@ -27,6 +27,7 @@
             <div class="patientdb__card container--all container--wrapper">
                 <div class="patientdb__image"></div>
                 <h1 class="container--margin-bottom-sm">PatientDB</h1>
+                <p>&#128542; No connection to elasticsearch. Search disabled.</p>
                 <form action="{{ url_for('main.search') }}" method="get">
                     <input class="container--margin-bottom-sm container--input-padding" 
                         type="text" name="query" id="" placeholder="Search..." autocomplete="off">
