@@ -30,6 +30,8 @@ Werkzeug = "==2.0.2"
 WTForms = "==2.3.3"
 flask-migrate = "*"
 flask-markdown = "*"
+flask-sslify = "*"
+gunicorn = "*"
 
 [dev-packages]
 faker = "*"

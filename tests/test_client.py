@@ -20,10 +20,14 @@ class FlaskClienttestCase(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    def test_home_page(self):
+    def test_home_page_and_about(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Hello!' in response.get_data(as_text=True))
+
+        response = self.client.get('/about')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('PatientDB' in response.get_data(as_text=True))
 
     def test_404_page(self):
         response = self.client.get('/unknown')
@@ -31,7 +35,10 @@ class FlaskClienttestCase(unittest.TestCase):
 
     def test_faker(self):
         patients()
+        response = self.client.get('/all_patients')
         self.assertEqual(10, Patient.query.count())
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('10 Results' in response.get_data(as_text=True))
     
     def test_model(self):
         response = Patient(first_name='test_name', last_name='test_lastname',
@@ -42,7 +49,7 @@ class FlaskClienttestCase(unittest.TestCase):
         self.assertEqual(response.first_name, 'test_name') 
         self.assertIsInstance(response, Patient)
 
-    def test_add_patient_query_similar_patient_patient_details_and_delete(self):
+    def test_add_patient_query_edit_patient_similar_patient_patient_details_and_delete(self):
         response = self.client.post('/commit_patient', data={
             'first_name' : 'test_name',
             'last_name' : 'test_lastname',
@@ -63,6 +70,9 @@ class FlaskClienttestCase(unittest.TestCase):
         })
         self.assertEqual(response.status_code, 200)
 
+        patient = Patient.query.filter_by(first_name='test_name').first_or_404()
+        id = patient.id
+
         response = self.client.post('/similar_patient', data={
             'query' : 'true',
             'first_name' : 'test_name',
@@ -77,12 +87,19 @@ class FlaskClienttestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(re.search('test_lastname', response.get_data(as_text=True)))
 
-        response = self.client.get('/patient/1')
+        response = self.client.get('/patient/{}'.format(id))
         self.assertEqual(response.status_code, 200)
         self.assertTrue(re.search('test_lastname', response.get_data(as_text=True)))
 
-        response = self.client.get('/patient/delete_patient', query_string={"delete": 1})
+        response = self.client.post('/patient/{}/edit'.format(id))
         self.assertEqual(response.status_code, 302)
+
+        response = self.client.get('/patient/{}/edit'.format(id))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get('/patient/delete_patient', query_string={"delete": 1}, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('Deleted: test_lastname, test_name' in response.get_data(as_text=True))
 
     def test_similar_patient_exception(self):
         response = self.client.post('/similar_patient', data={
@@ -91,3 +108,55 @@ class FlaskClienttestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         
+    def test_diagnosis_data_list(self):
+        patients(1) #creates patients
+        patient = Patient.query.get(1)
+        self.assertIsInstance(patient, Patient)
+
+        response = self.client.post('/diagnosis_list_update', data={
+            'action' : 'add',
+            'diagnosis' : ''
+        })
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post('/diagnosis_list_update', data={
+            'action' : 'add',
+            'diagnosis' : 'test_disease'
+        })
+        self.assertEqual(response.status_code, 200)
+        # duplicate to catch error if diagnosis is already added
+        response = self.client.post('/diagnosis_list_update', data={
+            'action' : 'add',
+            'diagnosis' : 'test_disease'
+        })
+        db.session.rollback()
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post('/update_patient_diagnosis', data={
+            'patient_id' : 1,
+            'diagnosis' : 'test_disease',
+            'action' : 'add'
+        })
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post('/update_patient_diagnosis', data={
+            'patient_id' : 1,
+            'diagnosis' : 'test_disease',
+            'action' : 'add'
+        })
+        from sqlalchemy.exc import IntegrityError
+        self.assertRaises(IntegrityError)
+        db.session.rollback()
+
+        response = self.client.post('/update_patient_diagnosis', data={
+            'patient_id' : 1,
+            'diagnosis' : 'test_disease_second',
+            'action' : 'add'
+        })
+        self.assertRaises(AttributeError)
+
+        response = self.client.post('/diagnosis_list_update', data={
+            'action' : 'delete',
+            'diagnosis' : 'test_disease'
+        })
+        self.assertEqual(response.status_code, 200)

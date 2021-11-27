@@ -48,8 +48,11 @@ class SearchableMixin(object):
         for obj in cls.query:
             add_to_index(cls.__tablename__, obj)
 
-db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
-db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+try:
+    db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
+    db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+except:
+    current_app.logger.warning("No Connection to Elasticsearch service")
 
 diagnosisTable = db.Table("diagnosis_patient",
     db.Column('diagnosis_id', db.Integer, db.ForeignKey('diagnosis.id'), primary_key=True),

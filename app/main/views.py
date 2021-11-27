@@ -2,12 +2,23 @@ from math import ceil
 from flask import render_template, url_for, request, current_app, jsonify, redirect, session
 from datetime import date, datetime, time
 from flask.helpers import flash
+from flask_sqlalchemy import get_debug_queries
 from werkzeug.urls import url_parse
 from sqlalchemy.exc import IntegrityError
 from . import main
 from .forms import GeneralDataForm, HistoryForm, FullPatientForm
 from ..models import Patient, History, Diagnosis
 from .. import db
+
+@main.after_app_request
+def after_request(response):
+    for query in get_debug_queries():
+        if query.duration >= current_app.config['SLOW_DB_QUERY_TIME']:
+            current_app.logger.warning(
+                'Slow query: %s\nParameters: %s\nDuration: %fs\nContext: %s\n' %
+                (query.statement, query.parameters, query.duration, query.context)
+            )
+    return response
 
 @main.route("/", methods=["GET"])
 def index():
@@ -71,9 +82,8 @@ def similar_patient():
             if elastic_check_for_emptydb == []:
                 form = HistoryForm()
                 return jsonify({ 'html' : render_template("main/section_second_form.html", form=form), 'message' : "Database empty." }) #change this after making html form for diagnosis and history
-    else:
-        form = HistoryForm()
-        return jsonify({ "html" : render_template("main/section_second_form.html", form=form), 'message' : "&#10071; Please make sure patient is not duplicate. Complete form below." })
+    form = HistoryForm()
+    return jsonify({ "html" : render_template("main/section_second_form.html", form=form), 'message' : "&#10071; Please make sure patient is not duplicate. Complete form below." })
 
 @main.route("/commit_patient", methods=["POST"])
 def commit_patient():
@@ -169,7 +179,7 @@ def diagnosis_list_update():
         message = action.capitalize()
 
         if diagnosis == '':
-            return jsonify({ 'message' : 'no input'})
+            return jsonify({ 'message' : '&#10060; No input!'})
         else: 
             try:
                 if action == "add":
@@ -184,9 +194,9 @@ def diagnosis_list_update():
                 diagnosis_query = Diagnosis.query.all()
             except:
                 if action == "add":
-                    return jsonify({ 'message' : '&#10004;&#65039; Diagnosis already in database!<br>Can not delete if it does not exist.'})
+                    return jsonify({ 'message' : '&#10004;&#65039; Diagnosis already in database!'})
                 else:
-                    return jsonify({ 'message' : '&#10060; Diagnosis not in database!'})
+                    return jsonify({ 'message' : '&#10060; Diagnosis not in database!<br>&nbsp;&nbsp;Can not delete if it does not exist.'})
             return jsonify({ "html" : render_template("main/section_diagnosis.html", diagnosis_select = diagnosis_query, diagnosis = diagnosis),
                 "message" : f"&#128203; {message}: {diagnosis}." })
 
@@ -197,10 +207,10 @@ def update_patient_diagnosis():
     action = request.form["action"]
 
     if diagnosis == '':
-        return jsonify({ 'message' : 'no input'})
+        return jsonify({ 'message' : '&#10060; No input!'})
     else:
         patient_query = Patient.query.filter_by(id=patient_id).first_or_404()
-        diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first_or_404()
+        diagnosis_query = Diagnosis.query.filter_by(disease=diagnosis).first()
         try:
             if action == 'add':
                 patient = patient_query.final_diagnosis.append(diagnosis_query)

@@ -30,9 +30,9 @@ def create_app(config_name):
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
         if app.config['ELASTICSEARCH_URL'] else None
 
-    # if app.config["SSL_REDIRECT"]:
-    #         from flask_sslify import SSLify
-    #         sslify = SSLify(app)
+    if app.config["SSL_REDIRECT"]:
+        from flask_sslify import SSLify
+        sslify = SSLify(app)
 
     assets.register(bundles)
 
