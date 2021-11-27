@@ -11,4 +11,4 @@ def page_not_found(e):
 @main.app_errorhandler(500)
 def internal_server_error(e):
     db.session.rollback()
-    return render_template('500.html', back_link = url_for('main.index'),e=e), 500
+    return render_template('errors/500.html', back_link = url_for('main.index'),e=e), 500
