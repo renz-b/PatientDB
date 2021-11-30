@@ -140,6 +140,11 @@
 - JQuery
 - SASS
 
+## :runner: Roadmap
+- Integrate Users with Log in and Logout functions.
+- Refactor History model to dynamically create the only desired histories.
+- Integrate User names to History model with timestamps such as date created or date updated with username.
+
 ## :open_file_folder: Resources
 [Flask Miguel Grinberg Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvi-full-text-search)
 > Integration of elasticsearch to PostgreSQL. Since elasticsearch returns string results, the tutorial helped me return the results as objects of the Patient model with pagination. It also includes how to update the index on every commit by adding event listeners after and before commits to trigger functions that update the index.
